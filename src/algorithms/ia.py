@@ -27,7 +27,6 @@ def johnsons_algorithm(tasks: dict[int, tuple[int, int]]) -> list[int]:
     # Combine the two sorted lists into one
     return list_1 + list_2
 
-
 if __name__ == "__main__":
     tasks = {
         1: (2, 3),
@@ -43,7 +42,7 @@ if __name__ == "__main__":
     }
 
     sorted_tasks = johnsons_algorithm(tasks)
-    print(sorted_tasks)
+        print(sorted_tasks)
 
     for task in sorted_tasks:
         print(tasks[task][0], end=", ")
