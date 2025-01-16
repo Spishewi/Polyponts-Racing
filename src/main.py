@@ -1,3 +1,5 @@
+# This file has been modified by Spishewi and Isteer from the exemple profided by pygbag
+
 import asyncio
 import pygame
 
