@@ -3,6 +3,8 @@
 import asyncio
 import pygame
 
+from scenes.mainmenu import MainMenu
+
 # Try to declare all your globals at once to facilitate compilation later.
 RUNNING = True
 
@@ -12,6 +14,10 @@ LASTFRAME = 0
 pygame.init()
 
 screen = pygame.display.set_mode((640, 480))
+mainmenu = MainMenu()
+
+
+current_scene = mainmenu
 
 # Load any assets right now to avoid lag at runtime or network errors.
 
@@ -32,13 +38,17 @@ async def main():
             if event.type == pygame.QUIT:
                 RUNNING = False
 
+            current_scene.event_handler(event)
+            
+
+
         # Do your rendering here, note that it's NOT an infinite loop,
         # and it is fired only when VSYNC occurs
         # Usually 1/60 or more times per seconds on desktop
         # could be less on some mobile devices
-        screen.fill((0, 0, 0))
-
-        pygame.draw.circle(screen, (255, 0, 0), pygame.mouse.get_pos(), 10)
+        current_scene.update(dt)
+        
+        current_scene.draw(screen)
 
         pygame.display.update()
         await asyncio.sleep(0)  # Very important, and keep it 0
