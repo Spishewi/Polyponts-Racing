@@ -15,13 +15,17 @@ LASTFRAME = 0
 # Do init here
 pygame.init()
 
-font_size = 36
+TITLE_FONT_SIZE = 36
+BUTTON_FONT_SIZE = 26
+
+
 screen = pygame.display.set_mode((640, 480), pygame.SCALED | pygame.RESIZABLE)
 
-global_title_font = pygame.font.SysFont("comic sans ms", font_size)
+global_title_font = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
+global_button_font = pygame.font.SysFont("comic sans ms", BUTTON_FONT_SIZE)
 
-mainmenu = MainMenu(global_title_font, global_title_font)
-choose_number_scene = ChooseNumberScene(global_title_font, global_title_font)
+mainmenu = MainMenu(global_title_font, global_button_font)
+choose_number_scene = ChooseNumberScene(global_title_font, global_button_font)
 
 current_scene = mainmenu
 

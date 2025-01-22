@@ -3,7 +3,7 @@ import pygame
 from scenes.scene import Scene
 
 class ChooseNumberScene(Scene):
-    def __init__(self, title_font: pygame.Font):
+    def __init__(self, title_font: pygame.Font, button_font: pygame.Font):
         
         self.title_font = title_font
         self.current_number_value = 5
