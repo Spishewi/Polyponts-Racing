@@ -5,6 +5,7 @@ import pygame
 
 #from scenes.mainmenu import MainMenu
 from scenes.choose_number_scene import ChooseNumberScene
+from scenes.mainmenu import MainMenu
 
 # Try to declare all your globals at once to facilitate compilation later.
 RUNNING = True
@@ -14,12 +15,15 @@ LASTFRAME = 0
 # Do init here
 pygame.init()
 
+font_size = 36
 screen = pygame.display.set_mode((640, 480), pygame.SCALED | pygame.RESIZABLE)
 
-global_title_font = pygame.font.SysFont("comic sans ms", 32)
+global_title_font = pygame.font.SysFont("comic sans ms", font_size)
 
-#mainmenu = MainMenu()
-current_scene = ChooseNumberScene(global_title_font)
+mainmenu = MainMenu(global_title_font, global_title_font)
+choose_number_scene = ChooseNumberScene(global_title_font, global_title_font)
+
+current_scene = mainmenu
 
 
 
