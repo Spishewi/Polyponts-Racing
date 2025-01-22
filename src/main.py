@@ -3,7 +3,8 @@
 import asyncio
 import pygame
 
-from scenes.mainmenu import MainMenu
+#from scenes.mainmenu import MainMenu
+from scenes.choose_number_scene import ChooseNumberScene
 
 # Try to declare all your globals at once to facilitate compilation later.
 RUNNING = True
@@ -13,11 +14,15 @@ LASTFRAME = 0
 # Do init here
 pygame.init()
 
-screen = pygame.display.set_mode((640, 480))
-mainmenu = MainMenu()
+screen = pygame.display.set_mode((640, 480), pygame.SCALED | pygame.RESIZABLE)
+
+global_title_font = pygame.font.SysFont("comic sans ms", 32)
+
+#mainmenu = MainMenu()
+current_scene = ChooseNumberScene(global_title_font)
 
 
-current_scene = mainmenu
+
 
 # Load any assets right now to avoid lag at runtime or network errors.
 
@@ -47,7 +52,7 @@ async def main():
         # Usually 1/60 or more times per seconds on desktop
         # could be less on some mobile devices
         current_scene.update(dt)
-        
+
         current_scene.draw(screen)
 
         pygame.display.update()
