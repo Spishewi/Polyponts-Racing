@@ -13,8 +13,10 @@ LASTFRAME = 0
 # Do init here
 pygame.init()
 
+font_size = 36
+font = pygame.font.SysFont('arial', font_size)
 screen = pygame.display.set_mode((640, 480))
-mainmenu = MainMenu()
+mainmenu = MainMenu(font,font)
 
 
 current_scene = mainmenu
