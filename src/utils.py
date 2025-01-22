@@ -1,4 +1,4 @@
-def map(value, min1, max1, min2, max2):
+def map_value(value, min1, max1, min2, max2):
     """
     Maps a value from one range to another range.
 

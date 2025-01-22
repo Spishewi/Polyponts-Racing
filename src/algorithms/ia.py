@@ -42,7 +42,7 @@ if __name__ == "__main__":
     }
 
     sorted_tasks = johnsons_algorithm(tasks)
-        print(sorted_tasks)
+    print(sorted_tasks)
 
     for task in sorted_tasks:
         print(tasks[task][0], end=", ")
