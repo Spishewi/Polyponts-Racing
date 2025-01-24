@@ -3,7 +3,7 @@ from scenes.scene import Scene
 import pygame
 
 from colors import *
-
+import events
 
 
 #button dimension and position
@@ -34,7 +34,16 @@ class MainMenu(Scene):
         self.tutorial = pygame.image.load('./assets/icons/help.png')
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict) -> None:
-        ...
+        #change the scene according to the mouseclick
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.button_easy.collidepoint(event.pos):
+                events.send_scene_change_event("choose_number_scene")
+            if self.button_medium.collidepoint(event.pos):
+                events.send_scene_change_event("choose_number_scene")
+            if self.button_hard.collidepoint(event.pos):
+                events.send_scene_change_event("choose_number_scene")
+        
+        
     def update(self, dt: float, *args: list, **kwargs: dict) -> None:
         ...
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict) -> None:
