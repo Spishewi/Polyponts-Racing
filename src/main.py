@@ -27,7 +27,7 @@ global_button_font = pygame.font.SysFont("comic sans ms", BUTTON_FONT_SIZE)
 mainmenu = MainMenu(global_title_font, global_button_font)
 choose_number_scene = ChooseNumberScene(global_title_font, global_button_font)
 
-current_scene = choose_number_scene
+current_scene = mainmenu
 
 
 
