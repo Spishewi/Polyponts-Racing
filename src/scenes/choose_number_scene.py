@@ -58,7 +58,7 @@ class ChooseNumberScene(Scene):
             max_in_pixels = window_width // 2 + 150
 
             if min_in_pixels <= mouse_x <= max_in_pixels:
-                self.current_number_value = map_value(pygame.mouse.get_pos()[0], min_in_pixels, max_in_pixels, MIN_VALUE, MAX_VALUE)
+                self.current_number_value = round(map_value(pygame.mouse.get_pos()[0], min_in_pixels, max_in_pixels, MIN_VALUE, MAX_VALUE))
             elif mouse_x < min_in_pixels:
                 self.current_number_value = MIN_VALUE
             elif mouse_x > max_in_pixels:
