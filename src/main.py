@@ -6,7 +6,7 @@ import pygame
 #from scenes.mainmenu import MainMenu
 from scenes.choose_number_scene import ChooseNumberScene
 from scenes.mainmenu import MainMenu
-
+from scenes.choose_order_scene import ChooseOrderScene
 import events
 # Try to declare all your globals at once to facilitate compilation later.
 RUNNING = True
@@ -25,7 +25,7 @@ screen = pygame.display.set_mode((640, 480))
 GLOBAL_TITLE_FONT = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
 GLOBAL_BUTTON_FONT = pygame.font.SysFont("comic sans ms", BUTTON_FONT_SIZE)
 
-current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_BUTTON_FONT)
+current_scene = ChooseOrderScene(GLOBAL_TITLE_FONT, GLOBAL_BUTTON_FONT)
 
 
 # Load any assets right now to avoid lag at runtime or network errors.
@@ -52,7 +52,8 @@ async def main():
                     current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_BUTTON_FONT)
                 elif event.scene == "choose_number_scene":
                     current_scene = ChooseNumberScene(GLOBAL_TITLE_FONT, GLOBAL_BUTTON_FONT)
-
+                elif event.scene == "choose_order_scene":
+                    current_scene = ChooseOrderScene(GLOBAL_TITLE_FONT, GLOBAL_BUTTON_FONT)
             current_scene.event_handler(event)
             
 

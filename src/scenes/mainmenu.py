@@ -22,7 +22,7 @@ class MainMenu(Scene):
         #init of buttons
         self.BORDER_RADIUS_BUTTON = 5
         window_width = pygame.display.get_surface().get_width()
-        window_height = pygame.display.get_surface().get_height()
+
         self.button_easy_render = button_font.render("Mode facile", True, BLACK)
         self.button_easy = pygame.Rect(window_width//2-width_button//2, y_button, width_button, height_button)  # Position (x, y), width, height
         self.button_medium_render = button_font.render("Mode intermediaire", True, BLACK)
