@@ -37,11 +37,11 @@ class MainMenu(Scene):
         #change the scene according to the mouseclick
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if self.button_easy.collidepoint(event.pos):
-                events.send_scene_change_event("choose_number_scene")
+                events.send_scene_change_event("choose_number_scene", difficulty="easy")
             if self.button_medium.collidepoint(event.pos):
-                events.send_scene_change_event("choose_number_scene")
+                events.send_scene_change_event("choose_number_scene", difficulty="medium")
             if self.button_hard.collidepoint(event.pos):
-                events.send_scene_change_event("choose_number_scene")
+                events.send_scene_change_event("choose_number_scene", difficulty="hard")
         
         
     def update(self, dt: float, *args: list, **kwargs: dict) -> None:
