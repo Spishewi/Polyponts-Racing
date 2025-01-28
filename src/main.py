@@ -49,11 +49,11 @@ async def main():
 
             elif event.type == events.SCENE_CHANGE:
                 if event.scene == "mainmenu":
-                    current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
+                    current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "choose_number_scene":
-                    current_scene = ChooseNumberScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, event.difficulty)
+                    current_scene = ChooseNumberScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "choose_order_scene":
-                    current_scene = ChooseOrderScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, event.difficulty, event.nb_people)
+                    current_scene = ChooseOrderScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
             current_scene.event_handler(event)
             
 

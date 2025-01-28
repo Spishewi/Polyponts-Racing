@@ -12,7 +12,7 @@ MIN_VALUE = 5
 MAX_VALUE = 20
 
 class ChooseNumberScene(Scene):
-    def __init__(self, title_font: pygame.Font, text_font: pygame.Font, difficulty: str):
+    def __init__(self, title_font: pygame.Font, text_font: pygame.Font, difficulty: str, nb_people: int = MIN_VALUE):
         
         # init fonts
         self.title_font = title_font
@@ -46,7 +46,7 @@ class ChooseNumberScene(Scene):
         self.slider_cursor = pygame.Rect(0, 0, 20, 20)
         self.slider_cursor_grabbed = False
 
-        self.current_number_value = MIN_VALUE
+        self.current_number_value = nb_people
         self.current_number_render = self.text_font.render(f"Votre choix : {self.current_number_value}", True, BLACK)
 
 
@@ -58,8 +58,9 @@ class ChooseNumberScene(Scene):
             
             elif self.choose_order_button.collidepoint(event.pos):
                 events.send_scene_change_event("choose_order_scene",
-                                                difficulty=self.difficulty,
-                                                nb_people=self.current_number_value)
+                                               {"difficulty": self.difficulty,
+                                                "nb_people": self.current_number_value})
+
             
             elif self.slider_cursor.collidepoint(event.pos):
                 self.slider_cursor_grabbed = True

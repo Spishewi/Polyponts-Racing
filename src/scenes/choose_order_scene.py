@@ -27,7 +27,8 @@ class ChooseOrderScene(Scene):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button ==1:
             if self.back_button.collidepoint(event.pos):
                 events.send_scene_change_event("choose_number_scene",
-                                               difficulty=self.difficulty, nb_people=self.nb_people)
+                                               {"difficulty":self.difficulty,
+                                                "nb_people":self.nb_people})
             ...
         ...
     
