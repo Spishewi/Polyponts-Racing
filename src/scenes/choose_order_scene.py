@@ -29,8 +29,8 @@ class ChooseOrderScene(Scene):
                 events.send_scene_change_event("choose_number_scene",
                                                {"difficulty":self.difficulty,
                                                 "nb_people":self.nb_people})
-            ...
         ...
+        
     
     def update(self, dt: float, *args: list, **kwargs: dict):
         ...
