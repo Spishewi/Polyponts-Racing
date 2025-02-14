@@ -20,7 +20,7 @@ TITLE_FONT_SIZE = 36
 TEXT_FONT_SIZE = 26
 
 
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((800, 600))
 
 GLOBAL_TITLE_FONT = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
 GLOBAL_TEXT_FONT = pygame.font.SysFont("comic sans ms", TEXT_FONT_SIZE)
@@ -57,7 +57,7 @@ async def main():
             current_scene.event_handler(event)
             
 
-
+        # comments from exemple file.
         # Do your rendering here, note that it's NOT an infinite loop,
         # and it is fired only when VSYNC occurs
         # Usually 1/60 or more times per seconds on desktop
