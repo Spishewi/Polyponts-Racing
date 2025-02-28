@@ -7,7 +7,7 @@ import pygame
 from scenes.choose_number_scene import ChooseNumberScene
 from scenes.mainmenu import MainMenu
 from scenes.choose_order_scene import ChooseOrderScene
-from scenes.playscene import PlayScene
+from scenes.play_scene import PlayScene
 from scenes.finish_scene import FinishScene
 
 import events
@@ -57,7 +57,7 @@ async def main():
                     current_scene = ChooseNumberScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "choose_order_scene":
                     current_scene = ChooseOrderScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
-                elif event.scene == "playscene":
+                elif event.scene == "play_scene":
                     current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "finish_scene":
                     current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
