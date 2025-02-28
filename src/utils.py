@@ -22,3 +22,6 @@ def map_value(value, min1, max1, min2, max2):
         float: The mapped value.
     """
     return (value - min1) / (max1 - min1) * (max2 - min2) + min2
+
+def bridge_parabolla(height: float, t: float):
+    return - height * (2 * t - 1) ** 2 + height

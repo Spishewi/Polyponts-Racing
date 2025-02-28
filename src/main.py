@@ -9,7 +9,7 @@ from scenes.mainmenu import MainMenu
 from scenes.choose_order_scene import ChooseOrderScene
 from scenes.play_scene import PlayScene
 from scenes.finish_scene import FinishScene
-
+from utils import People
 import events
 # Try to declare all your globals at once to facilitate compilation later.
 RUNNING = True
@@ -28,7 +28,7 @@ screen = pygame.display.set_mode((800, 600))
 GLOBAL_TITLE_FONT = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
 GLOBAL_TEXT_FONT = pygame.font.SysFont("comic sans ms", TEXT_FONT_SIZE)
 
-current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
+current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,1,1)])
 
 
 # Load any assets right now to avoid lag at runtime or network errors.
