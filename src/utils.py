@@ -6,6 +6,7 @@ class People:
     m1_time: int
     m2_time: int
 
+
 def map_value(value, min1, max1, min2, max2):
     """
     Maps a value from one range to another range.

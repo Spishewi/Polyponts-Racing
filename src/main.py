@@ -28,7 +28,7 @@ screen = pygame.display.set_mode((800, 600))
 GLOBAL_TITLE_FONT = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
 GLOBAL_TEXT_FONT = pygame.font.SysFont("comic sans ms", TEXT_FONT_SIZE)
 
-current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
+current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
 
 
 # Load any assets right now to avoid lag at runtime or network errors.
