@@ -98,8 +98,8 @@ class ChooseOrderScene(Scene):
 
         # draw grabbed cell
         if self.grabbed_cell_index is not None:
-            cell = self.cells_list[self.grabbed_cell_index]
-            draw_surface.blit(cell, cell.get_rect(center=pygame.mouse.get_pos()), special_flags=pygame.BLEND_MULT)
+            self._draw_grabbed_cell(draw_surface)
+
 
         #draw button play
         pygame.draw.rect(draw_surface, ORANGE, self.play_button, border_radius=5)
@@ -123,9 +123,9 @@ class ChooseOrderScene(Scene):
 
         # draw lines
         for i in range(2):
-            pygame.draw.line(draw_surface, GREY,
+            pygame.draw.line(draw_surface, BLACK,
                              (table_rect_1.left, table_rect_1.top + (i+1)*table_rect_1.height/3),
-                             (table_rect_1.right - line_width, table_rect_1.top + (i+1)*table_rect_1.height/3),
+                             (table_rect_1.left + first_col_width, table_rect_1.top + (i+1)*table_rect_1.height/3),
                              width=line_width)
             
         for i in range(10):
@@ -135,9 +135,9 @@ class ChooseOrderScene(Scene):
                              width=line_width)
             
         for i in range(2):
-            pygame.draw.line(draw_surface, GREY,
+            pygame.draw.line(draw_surface, BLACK,
                              (table_rect_2.left, table_rect_2.top + (i+1)*table_rect_2.height/3),
-                             (table_rect_2.right - line_width, table_rect_2.top + (i+1)*table_rect_2.height/3),
+                             (table_rect_2.left + first_col_width, table_rect_2.top + (i+1)*table_rect_2.height/3),
                              width=line_width)
             
         for i in range(10):
@@ -159,14 +159,30 @@ class ChooseOrderScene(Scene):
         pygame.draw.rect(draw_surface, BLACK, table_rect_1, width=2, border_radius=5)
         pygame.draw.rect(draw_surface, BLACK, table_rect_2, width=2, border_radius=5)
 
+    def _draw_grabbed_cell(self, draw_surface: pygame.Surface):
+        # get grabbed cell
+        cell: pygame.Surface = self.cells_list[self.grabbed_cell_index]
+        # draw grabbed cell
+
+        alpha_surface_without_corners = pygame.Surface(cell.get_size(), pygame.SRCALPHA)
+        pygame.draw.rect(alpha_surface_without_corners, WHITE, alpha_surface_without_corners.get_rect(), border_radius=5)
+
+        cell_without_corners = cell.copy().convert_alpha()
+        cell_without_corners.blit(alpha_surface_without_corners, special_flags=pygame.BLEND_RGBA_MIN)
+
+        draw_surface.blit(cell_without_corners, cell.get_rect(center=pygame.mouse.get_pos()))
+
+        # put a box around
+        pygame.draw.rect(draw_surface, BLACK, cell.get_rect(center=pygame.mouse.get_pos()), width=2, border_radius=5)
+
     def _generate_people_list(self) -> list[People]:
         return [People(i, randint(50, 150), randint(50, 150)) for i in range(1, self.nb_people + 1)]
     
-    def _generate_cells_list(self) -> list[pygame.Rect]:
+    def _generate_cells_list(self) -> list[pygame.Surface]:
         cells = []
         for people in self.people_list:
             cell_surface = pygame.Surface(((self.table_rect_1.width - self.table_first_col_width)/10, self.table_rect_1.height))
-            cell_surface.fill(GREEN)
+            cell_surface.fill(WHITE)
 
             cell_id_render = self.text_font.render(chr(ord("A") + people.id_number - 1), True, BLACK)
             cell_time1_render = self.text_font.render(str(people.m1_time), True, BLACK)
@@ -177,6 +193,8 @@ class ChooseOrderScene(Scene):
             cell_surface.blit(cell_time1_render, cell_time1_render.get_rect(center=(cell_surface_rect.centerx, cell_surface_rect.centery)))
             cell_surface.blit(cell_time2_render, cell_time2_render.get_rect(center=(cell_surface_rect.centerx, cell_surface_rect.centery + cell_surface_rect.height//3)))
             
+            pygame.draw.line(cell_surface, BLACK, (0, cell_surface.height/3), (cell_surface.width, cell_surface.height/3), width=2)
+            pygame.draw.line(cell_surface, BLACK, (0, cell_surface.height*2/3), (cell_surface.width, cell_surface.height*2/3), width=2)
             cells.append(cell_surface)
         return cells
     

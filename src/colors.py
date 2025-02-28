@@ -2,6 +2,7 @@
 import pygame
 
 BLACK = pygame.Color(0, 0, 0)
+WHITE = pygame.Color(255, 255, 255)
 GREEN = pygame.Color(0, 255, 0)
 RED = pygame.Color(255, 0, 0)
 ORANGE = pygame.Color(255, 165, 0)
