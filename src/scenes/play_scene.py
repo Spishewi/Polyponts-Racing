@@ -135,4 +135,4 @@ class PlayScene(Scene):
             
     def _draw_people(self, people_player, draw_surface: pygame.Surface, start_plateform: pygame.Rect):
         #set const
-        
+        ...

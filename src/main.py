@@ -9,6 +9,7 @@ from scenes.mainmenu import MainMenu
 from scenes.choose_order_scene import ChooseOrderScene
 from scenes.play_scene import PlayScene
 from scenes.finish_scene import FinishScene
+from scenes.tutorial_scene import TutorialScene
 from utils import People
 import events
 # Try to declare all your globals at once to facilitate compilation later.
@@ -28,7 +29,8 @@ screen = pygame.display.set_mode((800, 600))
 GLOBAL_TITLE_FONT = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
 GLOBAL_TEXT_FONT = pygame.font.SysFont("comic sans ms", TEXT_FONT_SIZE)
 
-current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,1,1)])
+#current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,1,1)])
+current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
 
 
 # Load any assets right now to avoid lag at runtime or network errors.
@@ -60,7 +62,10 @@ async def main():
                 elif event.scene == "play_scene":
                     current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "finish_scene":
-                    current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
+                    current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
+                elif event.scene == "tutorial_scene":
+                    current_scene = TutorialScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
+                
             current_scene.event_handler(event)
             
 
