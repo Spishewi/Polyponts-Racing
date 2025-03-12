@@ -4,7 +4,6 @@ from colors import *
 import events
 from utils import multiple_render
 class TutorialScene(Scene):
-
     def __init__(self, title_font: pygame.Font, text_font: pygame.Font):
     
         #init font
@@ -45,10 +44,18 @@ class TutorialScene(Scene):
         draw_surface.blit(self.back_button_render, self.back_button_render.get_rect(center=self.back_button.center))
         
         #draw text
+        TutorialScene.draw_text(self, draw_surface, window_width)
+        
+    
+    def draw_text(self, draw_surface:pygame.Surface, window_width: int):
+        #constant
         x_offset = 30  
-        y_offset = 80  
+        y_offset = 90  
         x_gap = 10 
         y_gap = 40
+        
+        #variable
+        number_line = 0
         max_line_width = window_width - 40  
         line_width = 0  
         number_line = 0
@@ -65,4 +72,3 @@ class TutorialScene(Scene):
                 number_line += 1
                 line_width = word_width + x_gap
                 draw_surface.blit(word, (x_offset, y_offset + number_line * y_gap))
-

@@ -30,7 +30,7 @@ def bridge_parabolla(height: float, t: float):
 
 def multiple_render(text: str, font: pygame.font):
     list_render =[]
-    for word in text.split():
+    for word in text.split(" "):
         word_render = font.render(word, True, BLACK)
         list_render.append(word_render)
     return list_render
