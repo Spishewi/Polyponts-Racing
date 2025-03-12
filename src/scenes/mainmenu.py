@@ -22,7 +22,7 @@ class MainMenu(Scene):
         #init of buttons
         self.BORDER_RADIUS_BUTTON = 5
         window_width = pygame.display.get_surface().get_width()
-
+        window_height = pygame.display.get_surface().get_height()
         self.button_easy_render = button_font.render("Mode facile", True, BLACK)
         self.button_easy = pygame.Rect(window_width//2-width_button//2, y_button, width_button, height_button)  # Position (x, y), width, height
         self.button_medium_render = button_font.render("Mode intermediaire", True, BLACK)
@@ -32,6 +32,7 @@ class MainMenu(Scene):
         #init of image 
         self.settings = pygame.image.load('./assets/icons/settings.png') 
         self.tutorial = pygame.image.load('./assets/icons/help.png')
+        self.tutorial_rect = self.tutorial.get_rect(center=(window_width-self.tutorial.get_width()+5, window_height-self.tutorial.get_width()+5))
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict) -> None:
         #change the scene according to the mouseclick
@@ -42,8 +43,9 @@ class MainMenu(Scene):
                 events.send_scene_change_event("choose_number_scene", {"difficulty":"medium"})
             if self.button_hard.collidepoint(event.pos):
                 events.send_scene_change_event("choose_number_scene", {"difficulty":"hard"})
-        
-        
+            if self.tutorial_rect.collidepoint(event.pos):
+                events.send_scene_change_event("tutorial_scene")
+
     def update(self, dt: float, *args: list, **kwargs: dict) -> None:
         ...
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict) -> None:
@@ -75,5 +77,6 @@ class MainMenu(Scene):
 
         #draw image
         draw_surface.blit(self.settings, self.settings.get_rect(center=(self.settings.get_width()+5,window_height-self.settings.get_height()+5)))
-        draw_surface.blit(self.tutorial, self.tutorial.get_rect(center=(window_width-self.tutorial.get_width()+5, window_height-self.tutorial.get_width()+5)))
+        draw_surface.blit(self.tutorial, self.tutorial_rect)
+        
         ...
