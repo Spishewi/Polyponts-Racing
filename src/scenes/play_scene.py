@@ -39,10 +39,9 @@ class PlayScene(Scene):
         self.bridge_height = 0.1
 
         #init list people
-        self.bridge1_list_people_ia = sort_people(people_list, difficulty)
-        """
-        [People(i, randint(50, 150), randint(50, 150)) for i in range(len(self.people_list))]
-        """
+        self.bridge1_list_people_ia = people_list.copy() # dont need a deep copy, as the people wont be modified
+        shuffle(self.bridge1_list_people_ia) # TODO: use IA to sort it
+
         self.bridge2_people_ia = None
         self.bridge1_list_people_player = people_list
         self.bridge2_people_player = None
@@ -60,7 +59,7 @@ class PlayScene(Scene):
         ...
     def update(self, dt: float, *args: list, **kwargs: dict):
 
-        
+        # player movement handling
         if len(self.bridge1_list_people_player) != 0:
             # someone is walking on the player bridge 1
             if self.bridge1_current_time_player < self.bridge1_list_people_player[0].m1_time:
@@ -76,33 +75,34 @@ class PlayScene(Scene):
                 self.bridge1_current_time_player = self.bridge1_list_people_player[0].m1_time
 
         if self.bridge2_people_player is not None:
-            if self.bridge2_current_time_player < self.bridge2_people_player.m1_time:
+            if self.bridge2_current_time_player < self.bridge2_people_player.m2_time:
                 self.bridge2_current_time_player += dt * 10
             else:
                 self.bridge2_people_player = None
                 self.bridge2_current_time_player = 0
-    
+
+        # ia movement handling
         if len(self.bridge1_list_people_ia) != 0:
-            # ia is walking on the player bridge 1
+            # someone is walking on the ia bridge 1
             if self.bridge1_current_time_ia < self.bridge1_list_people_ia[0].m1_time:
                 self.bridge1_current_time_ia += dt * 10
 
-            # ia has finished walking on the bridge 1 and bridge 2 is free
+            # someone has finished walking on the bridge 1 and bridge 2 is free
             elif self.bridge2_people_ia is None:
                 self.bridge2_people_ia = self.bridge1_list_people_ia.pop(0)
                 self.bridge1_current_time_ia = 0
 
             else:
-                # wait for the ia on bridge 2 to finish
+                # wait for the people on bridge 2 to finish 
                 self.bridge1_current_time_ia = self.bridge1_list_people_ia[0].m1_time
-
+        
         if self.bridge2_people_ia is not None:
-            if self.bridge2_current_time_ia < self.bridge2_people_ia.m1_time:
+            if self.bridge2_current_time_ia < self.bridge2_people_ia.m2_time:
                 self.bridge2_current_time_ia += dt * 10
             else:
                 self.bridge2_people_ia = None
                 self.bridge2_current_time_ia = 0
-            
+
         
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill((255,255,255)) 
