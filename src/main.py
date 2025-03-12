@@ -72,7 +72,7 @@ async def main():
                 elif event.scene == "tutorial_scene":
                     current_scene = TutorialScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 
-
+            # Speed up the game
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     SPEED_FACTOR = 10
