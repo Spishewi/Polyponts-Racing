@@ -39,9 +39,7 @@ class PlayScene(Scene):
         self.bridge_height = 0.1
 
         #init list people
-        self.bridge1_list_people_ia = people_list.copy() # dont need a deep copy, as the people wont be modified
-        shuffle(self.bridge1_list_people_ia) # TODO: use IA to sort it
-
+        self.bridge1_list_people_ia = sort_people(people_list, difficulty)
         self.bridge2_people_ia = None
         self.bridge1_list_people_player = people_list
         self.bridge2_people_player = None
