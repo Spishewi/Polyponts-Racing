@@ -176,7 +176,7 @@ class ChooseOrderScene(Scene):
         pygame.draw.rect(draw_surface, BLACK, cell.get_rect(center=pygame.mouse.get_pos()), width=2, border_radius=5)
 
     def _generate_people_list(self) -> list[People]:
-        return [People(i, randint(50, 150), randint(50, 150)) for i in range(1, self.nb_people + 1)]
+        return [People(i, randint(4, 14)*10, randint(6, 16)*10) for i in range(1, self.nb_people + 1)]
     
     def _generate_cells_list(self) -> list[pygame.Surface]:
         cells = []

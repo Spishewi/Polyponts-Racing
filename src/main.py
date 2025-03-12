@@ -15,20 +15,21 @@ import events
 RUNNING = True
 
 LASTFRAME = 0
+SPEED_FACTOR = 1
 
 # Do init here
 pygame.init()
 
-TITLE_FONT_SIZE = 36
-TEXT_FONT_SIZE = 26
+TITLE_FONT_SIZE = 54
+TEXT_FONT_SIZE = 36
 
 
 screen = pygame.display.set_mode((800, 600))
 
-GLOBAL_TITLE_FONT = pygame.font.SysFont("comic sans ms", TITLE_FONT_SIZE)
-GLOBAL_TEXT_FONT = pygame.font.SysFont("comic sans ms", TEXT_FONT_SIZE)
+GLOBAL_TITLE_FONT = pygame.font.Font("./assets/fonts/m6x11plus.ttf", TITLE_FONT_SIZE)
+GLOBAL_TEXT_FONT = pygame.font.Font("./assets/fonts/m6x11plus.ttf", TEXT_FONT_SIZE)
 
-current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,1,1)])
+current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT) # PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,50,100)])
 
 
 # Load any assets right now to avoid lag at runtime or network errors.
@@ -38,9 +39,14 @@ async def main():
     global LASTFRAME
     global current_scene
 
+    global SPEED_FACTOR
+
+
     while RUNNING:
         # calculate delta time
         dt = (pygame.time.get_ticks() - LASTFRAME) / 1000
+
+        # prevent too big delta time (lagspikes)
         dt = min(dt, 0.1)
         dt = max(dt, 0.00001)
 
@@ -61,6 +67,16 @@ async def main():
                     current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "finish_scene":
                     current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    SPEED_FACTOR = 10
+            
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    SPEED_FACTOR = 1
+
+
             current_scene.event_handler(event)
             
 
@@ -69,7 +85,7 @@ async def main():
         # and it is fired only when VSYNC occurs
         # Usually 1/60 or more times per seconds on desktop
         # could be less on some mobile devices
-        current_scene.update(dt)
+        current_scene.update(dt * SPEED_FACTOR)
 
         current_scene.draw(screen)
 
