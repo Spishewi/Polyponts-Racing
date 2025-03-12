@@ -5,6 +5,7 @@ import events
 from math import floor,pi
 from utils import People, map_value, bridge_parabolla
 from random import randint
+from algorithms.ia import sort_people
 
 class PlayScene(Scene):
 
@@ -38,7 +39,10 @@ class PlayScene(Scene):
         self.bridge_height = 0.1
 
         #init list people
-        self.bridge1_list_people_ia = [People(i, randint(50, 150), randint(50, 150)) for i in range(len(self.people_list))]
+        self.bridge1_list_people_ia = sort_people(people_list, difficulty)
+        """
+        [People(i, randint(50, 150), randint(50, 150)) for i in range(len(self.people_list))]
+        """
         self.bridge2_people_ia = None
         self.bridge1_list_people_player = people_list
         self.bridge2_people_player = None
@@ -77,9 +81,28 @@ class PlayScene(Scene):
             else:
                 self.bridge2_people_player = None
                 self.bridge2_current_time_player = 0
+    
+        if len(self.bridge1_list_people_ia) != 0:
+            # ia is walking on the player bridge 1
+            if self.bridge1_current_time_ia < self.bridge1_list_people_ia[0].m1_time:
+                self.bridge1_current_time_ia += dt * 10
 
+            # ia has finished walking on the bridge 1 and bridge 2 is free
+            elif self.bridge2_people_ia is None:
+                self.bridge2_people_ia = self.bridge1_list_people_ia.pop(0)
+                self.bridge1_current_time_ia = 0
+
+            else:
+                # wait for the ia on bridge 2 to finish
+                self.bridge1_current_time_ia = self.bridge1_list_people_ia[0].m1_time
+
+        if self.bridge2_people_ia is not None:
+            if self.bridge2_current_time_ia < self.bridge2_people_ia.m1_time:
+                self.bridge2_current_time_ia += dt * 10
+            else:
+                self.bridge2_people_ia = None
+                self.bridge2_current_time_ia = 0
             
-
         
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill((255,255,255)) 
@@ -87,9 +110,6 @@ class PlayScene(Scene):
         #window dimension and useful things
         window_height = pygame.display.get_surface().get_height()
         window_width = pygame.display.get_surface().get_width()
-        dy = 130
-        width_high = window_width//6
-        width_low = window_width//8
 
         #draw background water
         high_water = 250
