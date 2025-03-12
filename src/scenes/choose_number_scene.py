@@ -93,7 +93,7 @@ class ChooseNumberScene(Scene):
         self.slider_cursor.centery = window_height // 2
     
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
-        draw_surface.fill((255, 255, 255))
+        draw_surface.fill(BACKGROUND_COLOR)
 
         window_width = draw_surface.get_width()
         window_height = draw_surface.get_height()

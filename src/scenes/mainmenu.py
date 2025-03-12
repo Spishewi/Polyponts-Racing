@@ -49,7 +49,7 @@ class MainMenu(Scene):
     def update(self, dt: float, *args: list, **kwargs: dict) -> None:
         ...
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict) -> None:
-        draw_surface.fill("white")
+        draw_surface.fill(BACKGROUND_COLOR)
         #get window size 
         window_width = pygame.display.get_surface().get_width()
         window_height = pygame.display.get_surface().get_height()
