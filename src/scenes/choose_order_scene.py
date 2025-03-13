@@ -48,6 +48,7 @@ class ChooseOrderScene(Scene):
 
         # cell grabbing
         self.grabbed_cell_index = None
+        self.collided_cell_index = None
 
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
@@ -69,11 +70,20 @@ class ChooseOrderScene(Scene):
                 self.grabbed_cell_index = cell_index
 
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            if (cell_index := self._get_collided_cell(event)) is not None and self.grabbed_cell_index is not None:
-                self.cells_list[cell_index], self.cells_list[self.grabbed_cell_index] = self.cells_list[self.grabbed_cell_index], self.cells_list[cell_index]
-                self.people_list[cell_index], self.people_list[self.grabbed_cell_index] = self.people_list[self.grabbed_cell_index], self.people_list[cell_index]
+            if (collided_cell_index := self._get_collided_cell(event)) is not None and self.grabbed_cell_index is not None:
+                
+                #self.cells_list[cell_index], self.cells_list[self.grabbed_cell_index] = self.cells_list[self.grabbed_cell_index], self.cells_list[cell_index]
+                #self.people_list[cell_index], self.people_list[self.grabbed_cell_index] = self.people_list[self.grabbed_cell_index], self.people_list[cell_index]
+                self.cells_list.insert(collided_cell_index, self.cells_list.pop(self.grabbed_cell_index))
+                self.people_list.insert(collided_cell_index, self.people_list.pop(self.grabbed_cell_index))
 
             self.grabbed_cell_index = None
+
+        elif event.type == pygame.MOUSEMOTION:
+            if (collided_cell_index := self._get_collided_cell(event)) is not None and self.grabbed_cell_index is not None:
+                self.collided_cell_index = collided_cell_index
+            else:
+                self.collided_cell_index = None
 
                 
     def update(self, dt: float, *args: list, **kwargs: dict):
@@ -93,8 +103,8 @@ class ChooseOrderScene(Scene):
         
         #draw table
         self._draw_table_content(draw_surface)
-        self._draw_table_hover(draw_surface)
         self._draw_table_border(draw_surface)
+        self._draw_table_grabbed_overlay(draw_surface)
 
         # draw grabbed cell
         if self.grabbed_cell_index is not None:
@@ -105,11 +115,27 @@ class ChooseOrderScene(Scene):
         pygame.draw.rect(draw_surface, ORANGE, self.play_button, border_radius=5)
         draw_surface.blit(self.play_button_render, self.play_button_render.get_rect(center=self.play_button.center))
 
-    def _draw_table_hover(self, draw_surface: pygame.Surface):
-        ...
-    def _draw_table_content(self, draw_surface: pygame.Surface):
-        for i, cell in enumerate(self.cells_list):
+    def _draw_table_grabbed_overlay(self, draw_surface: pygame.Surface):
+        # drawing the line
+        if self.grabbed_cell_index is not None and self.collided_cell_index is not None:
+            collided_cell = self.cells_list[self.collided_cell_index]
+            collided_cell_pos = self._get_cell_position(self.collided_cell_index, collided_cell)
             
+            if (self.collided_cell_index - self.grabbed_cell_index) < 0:
+                start_pos = collided_cell_pos
+                end_pos = collided_cell_pos + pygame.Vector2(0, collided_cell.height - 1)
+                pygame.draw.line(draw_surface, BLUE, start_pos, end_pos, 3)
+
+            elif (self.collided_cell_index - self.grabbed_cell_index) > 0:
+                start_pos = collided_cell_pos + pygame.Vector2(collided_cell.width, 0)
+                end_pos = collided_cell_pos + pygame.Vector2(collided_cell.width, collided_cell.height- 1)
+                pygame.draw.line(draw_surface, BLUE, start_pos, end_pos, 3)
+
+    def _draw_table_content(self, draw_surface: pygame.Surface):
+        
+        for i, cell in enumerate(self.cells_list):
+            if self.grabbed_cell_index is not None and i == self.grabbed_cell_index:
+                continue
             draw_surface.blit(cell, self._get_cell_position(i, cell))
 
     def _draw_table_border(self, draw_surface: pygame.Surface):
@@ -162,8 +188,8 @@ class ChooseOrderScene(Scene):
     def _draw_grabbed_cell(self, draw_surface: pygame.Surface):
         # get grabbed cell
         cell: pygame.Surface = self.cells_list[self.grabbed_cell_index]
-        # draw grabbed cell
 
+        # draw grabbed cell
         alpha_surface_without_corners = pygame.Surface(cell.get_size(), pygame.SRCALPHA)
         pygame.draw.rect(alpha_surface_without_corners, WHITE, alpha_surface_without_corners.get_rect(), border_radius=5)
 
@@ -198,11 +224,11 @@ class ChooseOrderScene(Scene):
             cells.append(cell_surface)
         return cells
     
-    def _get_cell_position(self, i: int, cell: pygame.Surface) -> pygame.typing.Point:
+    def _get_cell_position(self, i: int, cell: pygame.Surface) -> pygame.Vector2:
         x = self.table_rect_1.x + self.table_first_col_width + (i%10)*cell.width
         y = self.table_rect_1.y if i // 10 == 0 else self.table_rect_2.y
 
-        return (x, y)
+        return pygame.Vector2(x, y)
     def _get_collided_cell(self, event: pygame.Event) -> int | None:
         for i, cell in enumerate(self.cells_list):
             if self.grabbed_cell_index is not None and cell is self.cells_list[self.grabbed_cell_index]:
