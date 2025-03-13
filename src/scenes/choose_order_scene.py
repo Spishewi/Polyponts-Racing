@@ -22,10 +22,12 @@ class ChooseOrderScene(Scene):
         self.title_render_2 = self.text_font.render("de vos personnages", True, BLACK)
 
         draw_surface = pygame.display.get_surface() # not perfect, but it's more performant.
+        draw_surface_width = draw_surface.get_width()
+        draw_surface_height = draw_surface.get_height()
 
         #init button play
         self.play_button_render = self.text_font.render("Jouer !", True, BLACK)
-        self.play_button = pygame.Rect(draw_surface.width // 2 - self.play_button_render.width, draw_surface.height - 80, 120, 60)
+        self.play_button = pygame.Rect(draw_surface_width // 2 - self.play_button_render.get_width(), draw_surface_height - 80, 120, 60)
         #init button back
         self.back_button_render = self.text_font.render("Retour", True, BLACK)
         self.back_button = pygame.Rect(10, 10, 100, 50)
@@ -39,8 +41,8 @@ class ChooseOrderScene(Scene):
         self.table_line_width = 2
         self.table_first_col_width = 180
 
-        self.table_rect_1 = pygame.Rect(25, 150, draw_surface.width - 50, draw_surface.height // 4)
-        self.table_rect_2 = pygame.Rect(25, self.table_rect_1.bottom + 10, draw_surface.width - 50, draw_surface.height // 4)
+        self.table_rect_1 = pygame.Rect(25, 150, draw_surface_width - 50, draw_surface_height // 4)
+        self.table_rect_2 = pygame.Rect(25, self.table_rect_1.bottom + 10, draw_surface_width - 50, draw_surface_height // 4)
 
         # generate cells renders
         self.people_list = self._generate_people_list()
@@ -90,8 +92,8 @@ class ChooseOrderScene(Scene):
         ...
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill(BACKGROUND_COLOR)
-        window_width = draw_surface.width
-        window_height = draw_surface.height
+        window_width = draw_surface.get_width()
+        window_height = draw_surface.get_height()
         
         #draw title
         draw_surface.blit(self.title_render_1, self.title_render_1.get_rect(center=(window_width // 2, 30)))
@@ -121,14 +123,15 @@ class ChooseOrderScene(Scene):
             collided_cell = self.cells_list[self.collided_cell_index]
             collided_cell_pos = self._get_cell_position(self.collided_cell_index, collided_cell)
             
+            # if the line is on the left
             if (self.collided_cell_index - self.grabbed_cell_index) < 0:
                 start_pos = collided_cell_pos
-                end_pos = collided_cell_pos + pygame.Vector2(0, collided_cell.height - 1)
+                end_pos = collided_cell_pos + pygame.Vector2(0, collided_cell.get_height() - 1)
                 pygame.draw.line(draw_surface, BLUE, start_pos, end_pos, 3)
-
+            # if the line is on the right
             elif (self.collided_cell_index - self.grabbed_cell_index) > 0:
-                start_pos = collided_cell_pos + pygame.Vector2(collided_cell.width, 0)
-                end_pos = collided_cell_pos + pygame.Vector2(collided_cell.width, collided_cell.height- 1)
+                start_pos = collided_cell_pos + pygame.Vector2(collided_cell.get_width(), 0)
+                end_pos = collided_cell_pos + pygame.Vector2(collided_cell.get_width(), collided_cell.get_height()- 1)
                 pygame.draw.line(draw_surface, BLUE, start_pos, end_pos, 3)
 
     def _draw_table_content(self, draw_surface: pygame.Surface):
@@ -194,7 +197,7 @@ class ChooseOrderScene(Scene):
         pygame.draw.rect(alpha_surface_without_corners, WHITE, alpha_surface_without_corners.get_rect(), border_radius=5)
 
         cell_without_corners = cell.copy().convert_alpha()
-        cell_without_corners.blit(alpha_surface_without_corners, special_flags=pygame.BLEND_RGBA_MIN)
+        cell_without_corners.blit(alpha_surface_without_corners, dest=(0, 0), special_flags=pygame.BLEND_RGBA_MIN)
 
         draw_surface.blit(cell_without_corners, cell.get_rect(center=pygame.mouse.get_pos()))
 
@@ -219,13 +222,13 @@ class ChooseOrderScene(Scene):
             cell_surface.blit(cell_time1_render, cell_time1_render.get_rect(center=(cell_surface_rect.centerx, cell_surface_rect.centery)))
             cell_surface.blit(cell_time2_render, cell_time2_render.get_rect(center=(cell_surface_rect.centerx, cell_surface_rect.centery + cell_surface_rect.height//3)))
             
-            pygame.draw.line(cell_surface, BLACK, (0, cell_surface.height/3), (cell_surface.width, cell_surface.height/3), width=2)
-            pygame.draw.line(cell_surface, BLACK, (0, cell_surface.height*2/3), (cell_surface.width, cell_surface.height*2/3), width=2)
+            pygame.draw.line(cell_surface, BLACK, (0, cell_surface.get_height()/3), (cell_surface.get_width(), cell_surface.get_height()/3), width=2)
+            pygame.draw.line(cell_surface, BLACK, (0, cell_surface.get_height()*2/3), (cell_surface.get_width(), cell_surface.get_height()*2/3), width=2)
             cells.append(cell_surface)
         return cells
     
     def _get_cell_position(self, i: int, cell: pygame.Surface) -> pygame.Vector2:
-        x = self.table_rect_1.x + self.table_first_col_width + (i%10)*cell.width
+        x = self.table_rect_1.x + self.table_first_col_width + (i%10)*cell.get_width()
         y = self.table_rect_1.y if i // 10 == 0 else self.table_rect_2.y
 
         return pygame.Vector2(x, y)

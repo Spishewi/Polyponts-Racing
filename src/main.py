@@ -49,8 +49,8 @@ async def main():
         dt = (pygame.time.get_ticks() - LASTFRAME) / 1000
 
         # prevent too big delta time (lagspikes)
-        dt = min(dt, 0.1)
-        dt = max(dt, 0.00001)
+        dt = min(dt, 0.5)
+        dt = max(dt, 1/240)
 
         LASTFRAME = pygame.time.get_ticks()
         
@@ -94,7 +94,7 @@ async def main():
 
         current_scene.draw(screen)
 
-        pygame.display.update()
+        pygame.display.flip()
         await asyncio.sleep(0)  # Very important, and keep it 0
 
 # This is the program entry point:
