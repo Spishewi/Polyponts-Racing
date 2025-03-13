@@ -31,7 +31,7 @@ class TutorialScene(Scene):
         ...
 
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
-        draw_surface.fill((255, 255, 255))
+        draw_surface.fill(BACKGROUND_COLOR)
         #get window size 
         window_width = pygame.display.get_surface().get_width()
         

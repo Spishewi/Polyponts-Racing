@@ -89,7 +89,7 @@ class ChooseOrderScene(Scene):
     def update(self, dt: float, *args: list, **kwargs: dict):
         ...
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
-        draw_surface.fill((255, 255, 255))
+        draw_surface.fill(BACKGROUND_COLOR)
         window_width = draw_surface.width
         window_height = draw_surface.height
         
@@ -208,7 +208,7 @@ class ChooseOrderScene(Scene):
         cells = []
         for people in self.people_list:
             cell_surface = pygame.Surface(((self.table_rect_1.width - self.table_first_col_width)/10, self.table_rect_1.height))
-            cell_surface.fill(WHITE)
+            cell_surface.fill(BACKGROUND_COLOR)
 
             cell_id_render = self.text_font.render(chr(ord("A") + people.id_number - 1), True, BLACK)
             cell_time1_render = self.text_font.render(str(people.m1_time), True, BLACK)

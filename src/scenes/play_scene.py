@@ -4,7 +4,8 @@ from colors import *
 import events
 from math import floor,pi
 from utils import People, map_value, bridge_parabolla
-from random import shuffle
+from random import randint
+from algorithms.ia import sort_people
 
 class PlayScene(Scene):
 
@@ -38,9 +39,7 @@ class PlayScene(Scene):
         self.bridge_height = 0.1
 
         #init list people
-        self.bridge1_list_people_ia = people_list.copy() # dont need a deep copy, as the people wont be modified
-        shuffle(self.bridge1_list_people_ia) # TODO: use IA to sort it
-
+        self.bridge1_list_people_ia = sort_people(people_list, difficulty)
         self.bridge2_people_ia = None
         self.bridge1_list_people_player = people_list
         self.bridge2_people_player = None
@@ -109,9 +108,6 @@ class PlayScene(Scene):
         #window dimension and useful things
         window_height = pygame.display.get_surface().get_height()
         window_width = pygame.display.get_surface().get_width()
-        dy = 130
-        width_high = window_width//6
-        width_low = window_width//8
 
         #draw background water
         high_water = 250
