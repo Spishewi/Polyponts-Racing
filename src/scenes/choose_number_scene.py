@@ -6,6 +6,8 @@ from colors import *
 
 from utils import map_value
 
+from random import randint
+
 import events
 
 MIN_VALUE = 5
@@ -39,6 +41,9 @@ class ChooseNumberScene(Scene):
         self.choose_order_button_render = self.text_font.render("Choisir l'ordre", True, BLACK)
         self.choose_order_button = pygame.Rect(0, 0, 200, 50)
 
+        self.random_button_render = self.text_font.render("Aléatoire", True, BLACK)
+        self.random_button = pygame.Rect(20, 20, 150, 50)
+
         # init slider
         self.min_text_render = self.text_font.render(str(MIN_VALUE), True, BLACK)
         self.max_text_render = self.text_font.render(str(MAX_VALUE), True, BLACK)
@@ -65,9 +70,13 @@ class ChooseNumberScene(Scene):
             elif self.slider_cursor.collidepoint(event.pos):
                 self.slider_cursor_grabbed = True
 
+            elif self.random_button.collidepoint(event.pos):
+                self.current_number_value = randint(5, 20)
+                self.current_number_render = self.text_font.render(f"Votre choix : {self.current_number_value}", True, BLACK)
+
+                
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             self.slider_cursor_grabbed = False
-
     def update(self, dt: float, *args: list, **kwargs: dict):
         window_width = pygame.display.get_surface().get_width()
         window_height = pygame.display.get_surface().get_height()
@@ -140,5 +149,10 @@ class ChooseNumberScene(Scene):
         pygame.draw.rect(draw_surface, GREY, self.choose_order_button, border_radius=5)
         draw_surface.blit(self.choose_order_button_render, self.choose_order_button_render.get_rect(center=self.choose_order_button.center))
 
+        #draw random button
+        self.random_button.centerx = window_width // 2
+        self.random_button.centery = window_height - 180
+        pygame.draw.rect(draw_surface, LIGHT_GREEN, self.random_button, border_radius=5)
+        draw_surface.blit(self.random_button_render, self.random_button_render.get_rect(center=self.random_button.center))
 
 
