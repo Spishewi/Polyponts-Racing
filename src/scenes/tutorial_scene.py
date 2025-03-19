@@ -3,6 +3,8 @@ import pygame
 from colors import *
 import events
 from utils import multiple_render
+
+TUTORIAL_TEXT = "Le but de ce jeu est d'illustrer un problème d'ordonnancement : le flow-shop à deux machine. Concrètement, vous allez devoir aider des personnages à traverser des ponts le plus rapidement possible, en les triant dans l'ordre de votre choix. Vos personnages affronterons d'autres personnages triées par une IA très perfectionnée. Mais attention ! les ponts sont fragiles, et seulement une seule personne peut monter sur un pont à la fois. De plus, chaque personne met un temps différent à traverser chaque pont ! Il vous faudra donc trier les personnes afin d'optimiser le temps de passage de chaque personnes, et ainsi, battre le tri de l'IA."
 class TutorialScene(Scene):
     def __init__(self, title_font: pygame.Font, text_font: pygame.Font):
     
@@ -11,14 +13,14 @@ class TutorialScene(Scene):
         self.text_font = text_font
         
         #init render
-        self.title_render = self.title_font.render("Tutorial", True, BLACK)
+        self.title_render = self.title_font.render("Didacticiel", True, BLACK)
 
         #init button
         self.back_button_render = self.text_font.render("Retour", True, BLACK)
         self.back_button = pygame.Rect(10, 10, 100, 50)
 
         #init text
-        text = "Le but de ce jeu est d'illustrer le problème d'agencement à deux machines. Pour cela, tu dois choisir un nombre de personnes entre 5 et 20, chacune ayant un temps de traversée spécifique sur deux ponts. Il est important de noter qu'il ne peut y avoir plus d'une personne sur la plateforme reliant les deux ponts à la fois. Ton objectif est de planifier l'ordre de passage des personnes de manière à optimiser leur traversée, le but étant de faire passer les personnes en moins de temps possible"
+        text = TUTORIAL_TEXT
         self.text_render = multiple_render(text, text_font)
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
