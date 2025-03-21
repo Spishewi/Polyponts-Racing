@@ -9,8 +9,8 @@ import events
 #button dimension and position
 height_button = 80 #hauteur
 width_button = 300 #largeur
-y_button = 100
-dt_space = 20
+y_button = 140
+dt_space = 25
 
 class MainMenu(Scene):
     ...
@@ -30,7 +30,8 @@ class MainMenu(Scene):
         self.button_hard_render = button_font.render("Mode difficile", True, BLACK)
         self.button_hard = pygame.Rect(window_width//2-width_button//2, y_button+(height_button+dt_space)*2, width_button, height_button)
         #init of image 
-        self.settings = pygame.image.load('./assets/icons/settings.png') 
+        self.copyright = pygame.image.load('./assets/icons/copyright.png') 
+        self.copyright_rect = self.copyright.get_rect(center=(self.copyright.get_width()+5,window_height-self.copyright.get_height()+5))
         self.tutorial = pygame.image.load('./assets/icons/help.png')
         self.tutorial_rect = self.tutorial.get_rect(center=(window_width-self.tutorial.get_width()+5, window_height-self.tutorial.get_width()+5))
 
@@ -45,7 +46,9 @@ class MainMenu(Scene):
                 events.send_scene_change_event("choose_number_scene", {"difficulty":"hard"})
             if self.tutorial_rect.collidepoint(event.pos):
                 events.send_scene_change_event("tutorial_scene")
-
+            if self.copyright_rect.collidepoint(event.pos):
+                events.send_scene_change_event("contribution_scene")
+                
     def update(self, dt: float, *args: list, **kwargs: dict) -> None:
         ...
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict) -> None:
@@ -55,7 +58,7 @@ class MainMenu(Scene):
         window_height = pygame.display.get_surface().get_height()
         #draw main title
         title_width = draw_surface.get_width() //2
-        draw_surface.blit(self.title_render, self.title_render.get_rect(center=(title_width, 30)))
+        draw_surface.blit(self.title_render, self.title_render.get_rect(center=(title_width, 35)))
         
         #draw button easy
         pygame.draw.rect(draw_surface, GREEN, self.button_easy, border_radius=self.BORDER_RADIUS_BUTTON)
@@ -76,7 +79,7 @@ class MainMenu(Scene):
         draw_surface.blit(self.button_hard_render, text_button_hard)
 
         #draw image
-        draw_surface.blit(self.settings, self.settings.get_rect(center=(self.settings.get_width()+5,window_height-self.settings.get_height()+5)))
+        draw_surface.blit(self.copyright, self.copyright_rect)
         draw_surface.blit(self.tutorial, self.tutorial_rect)
         
         ...
