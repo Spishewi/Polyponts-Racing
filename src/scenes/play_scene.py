@@ -3,6 +3,7 @@ import pygame
 from colors import *
 from utils import People, map_value, bridge_parabolla
 from algorithms.ia import sort_people
+import events
 
 class PlayScene(Scene):
 
@@ -46,10 +47,25 @@ class PlayScene(Scene):
         self.bridge1_current_time_player = 0
         self.bridge2_current_time_player = 0
 
+        self.player_finished = False
+        self.ia_finished = False
+
         #init people rect
         high_figure = 30
         self.people_player = pygame.Rect(self.start_platform_1.topright[0], self.start_platform_1.topright[1]-high_figure, 10, high_figure)
         
+        #init font
+        self.title_font = title_font
+        self.text_font = text_font
+
+        #init render
+        self.title_render_player = self.text_font.render("Vos personnages :", True, BLACK)
+        self.title_render_ia = self.text_font.render("Les personnages de l'IA :", True, BLACK)
+
+        self.title_win_player = self.title_font.render("Vous avez gagnez !", True, RED)
+        self.title_win_ia = self.title_font.render("L'IA a gagnez !", True, RED)
+
+
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         ...
     def update(self, dt: float, *args: list, **kwargs: dict):
@@ -98,7 +114,16 @@ class PlayScene(Scene):
                 self.bridge2_people_ia = None
                 self.bridge2_current_time_ia = 0
 
-        
+        # check if the game is over
+        if len(self.bridge1_list_people_player) == 0 and self.bridge2_people_player is None:
+            self.player_finished = True
+
+        if len(self.bridge1_list_people_ia) == 0 and self.bridge2_people_ia is None:
+            self.ia_finished = True
+
+        if self.player_finished and self.ia_finished:
+            events.send_scene_change_event("finish_scene")
+
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill((255,255,255)) 
        
@@ -146,7 +171,17 @@ class PlayScene(Scene):
             self._draw_people(draw_surface, self.mid_platform_1, self.end_platform_1, self.bridge2_people_player.m2_time, self.bridge2_current_time_player)
         if self.bridge2_people_ia is not None:
             self._draw_people(draw_surface, self.mid_platform_2, self.end_platform_2, self.bridge2_people_ia.m2_time, self.bridge2_current_time_ia)
-    
+
+
+        draw_surface.blit(self.title_render_player, self.title_render_player.get_rect(center=(window_width // 2, 30)))
+        draw_surface.blit(self.title_render_ia, self.title_render_ia.get_rect(center=(window_width // 2, window_height//2 + 30)))
+
+        if self.player_finished and not self.ia_finished:
+            draw_surface.blit(self.title_win_player, self.title_win_player.get_rect(center=(window_width // 2, window_height//4)))
+
+        if self.ia_finished and not self.player_finished:
+            draw_surface.blit(self.title_win_ia, self.title_win_ia.get_rect(center=(window_width // 2, 3 * window_height//4)))
+
     def _draw_bridge(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect):
         #set const
         
