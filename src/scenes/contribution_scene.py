@@ -61,5 +61,5 @@ class ContributionScene(Scene):
         #draw link button
         self.link_button.centerx = window_width // 2
         self.link_button.centery = window_height - 140
-        pygame.draw.rect(draw_surface, VIVIDBLUE, self.link_button, border_radius=5)
+        pygame.draw.rect(draw_surface, CARIBBEAN_CURRENT, self.link_button, border_radius=5)
         draw_surface.blit(self.link_button_render, self.link_button_render.get_rect(center=self.link_button.center))

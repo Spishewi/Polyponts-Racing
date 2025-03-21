@@ -114,7 +114,7 @@ class ChooseOrderScene(Scene):
 
 
         #draw button play
-        pygame.draw.rect(draw_surface, ORANGE, self.play_button, border_radius=5)
+        pygame.draw.rect(draw_surface, CARIBBEAN_CURRENT, self.play_button, border_radius=5)
         draw_surface.blit(self.play_button_render, self.play_button_render.get_rect(center=self.play_button.center))
 
     def _draw_table_grabbed_overlay(self, draw_surface: pygame.Surface):
@@ -127,12 +127,12 @@ class ChooseOrderScene(Scene):
             if (self.collided_cell_index - self.grabbed_cell_index) < 0:
                 start_pos = collided_cell_pos
                 end_pos = collided_cell_pos + pygame.Vector2(0, collided_cell.get_height() - 1)
-                pygame.draw.line(draw_surface, BLUE, start_pos, end_pos, 3)
+                pygame.draw.line(draw_surface, CARIBBEAN_CURRENT, start_pos, end_pos, 3)
             # if the line is on the right
             elif (self.collided_cell_index - self.grabbed_cell_index) > 0:
                 start_pos = collided_cell_pos + pygame.Vector2(collided_cell.get_width(), 0)
                 end_pos = collided_cell_pos + pygame.Vector2(collided_cell.get_width(), collided_cell.get_height()- 1)
-                pygame.draw.line(draw_surface, BLUE, start_pos, end_pos, 3)
+                pygame.draw.line(draw_surface, CARIBBEAN_CURRENT, start_pos, end_pos, 3)
 
     def _draw_table_content(self, draw_surface: pygame.Surface):
         

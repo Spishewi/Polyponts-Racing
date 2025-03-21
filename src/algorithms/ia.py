@@ -57,6 +57,21 @@ def random_algorithm(people_list: list[People]):
 def suboptimal_algorithm(people_list:list[People]):
     # obtain the optimal solution wih the johnsons algorithm
     optimal_solution = johnsons_algorithm_people(people_list)
+    nb_people = len(optimal_solution)
+
+    for i in range(nb_people // 4):
+        #generate the two indices that need to be swapped
+        pos1 = randint(0, nb_people - 1)
+        pos2 = randint(0, nb_people - 1)
+        #o ensure that the same value is not swapped
+        while pos1 == pos2:
+            pos1 = randint(0, nb_people - 1)
+        
+        optimal_solution[pos1], optimal_solution[pos2] = optimal_solution[pos2], optimal_solution[pos1]
+
+    return optimal_solution
+
+         
     #sort the te optimal solution to obtain the inverse
     optimal_solution.sort(key=lambda x: x.id_number, reverse=True)
     return optimal_solution
@@ -100,8 +115,8 @@ if __name__ == "__main__":
 
 def sort_people(people_list:list[People], difficulty:str):
     if difficulty == "easy":
-        return suboptimal_algorithm(people_list)
-    elif difficulty == "medium":
         return random_algorithm(people_list)
+    elif difficulty == "medium":
+        return suboptimal_algorithm(people_list)
     elif difficulty == "hard":
         return johnsons_algorithm_people(people_list)
