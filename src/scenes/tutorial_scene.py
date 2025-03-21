@@ -39,7 +39,7 @@ class TutorialScene(Scene):
         
         #draw main title
         middle_width = draw_surface.get_width() //2
-        draw_surface.blit(self.title_render, self.title_render.get_rect(center=(middle_width, 30)))
+        draw_surface.blit(self.title_render, self.title_render.get_rect(center=(middle_width, 35)))
         
         #draw button back
         pygame.draw.rect(draw_surface, GREY, self.back_button, border_radius=5)

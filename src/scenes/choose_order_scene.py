@@ -96,8 +96,8 @@ class ChooseOrderScene(Scene):
         window_height = draw_surface.get_height()
         
         #draw title
-        draw_surface.blit(self.title_render_1, self.title_render_1.get_rect(center=(window_width // 2, 30)))
-        draw_surface.blit(self.title_render_2, self.title_render_2.get_rect(center=(window_width // 2, 60)))
+        draw_surface.blit(self.title_render_1, self.title_render_1.get_rect(center=(window_width // 2, 35)))
+        draw_surface.blit(self.title_render_2, self.title_render_2.get_rect(center=(window_width // 2, 65)))
         
         #draw button back
         pygame.draw.rect(draw_surface, GREY, self.back_button, border_radius=5)

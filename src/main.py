@@ -10,6 +10,7 @@ from scenes.choose_order_scene import ChooseOrderScene
 from scenes.play_scene import PlayScene
 from scenes.finish_scene import FinishScene
 from scenes.tutorial_scene import TutorialScene
+from scenes.contribution_scene import ContributionScene
 from utils import People
 import events
 # Try to declare all your globals at once to facilitate compilation later.
@@ -71,8 +72,8 @@ async def main():
                     current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
                 elif event.scene == "tutorial_scene":
                     current_scene = TutorialScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)
-                
-            # Speed up the game
+                elif event.scene == "contribution_scene":
+                    current_scene = ContributionScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, **event.scene_args)            # Speed up the game
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     SPEED_FACTOR = 10
