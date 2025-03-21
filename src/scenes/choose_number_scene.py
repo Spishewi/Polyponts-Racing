@@ -152,7 +152,7 @@ class ChooseNumberScene(Scene):
         #draw random button
         self.random_button.centerx = window_width // 2
         self.random_button.centery = window_height - 180
-        pygame.draw.rect(draw_surface, LIGHT_GREEN, self.random_button, border_radius=5)
+        pygame.draw.rect(draw_surface, BLUE, self.random_button, border_radius=5)
         draw_surface.blit(self.random_button_render, self.random_button_render.get_rect(center=self.random_button.center))
 
 
