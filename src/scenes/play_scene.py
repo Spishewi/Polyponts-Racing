@@ -49,6 +49,7 @@ class PlayScene(Scene):
 
         self.player_finished = False
         self.ia_finished = False
+        self.has_win = None
 
         #init people rect
         high_figure = 30
@@ -62,12 +63,19 @@ class PlayScene(Scene):
         self.title_render_player = self.text_font.render("Vos personnages :", True, BLACK)
         self.title_render_ia = self.text_font.render("Les personnages de l'IA :", True, BLACK)
 
-        self.title_win_player = self.title_font.render("Vous avez gagnez !", True, RED)
-        self.title_win_ia = self.title_font.render("L'IA a gagnez !", True, RED)
+        self.title_win_player = self.title_font.render("Vous avez gagné !", True, RED)
+        self.title_win_ia = self.title_font.render("L'IA a gagné !", True, RED)
+        self.title_win_draw = self.title_font.render("Egalité !", True, RED)
+
+        
+        self.next_btn_render = self.text_font.render("Résumé de la partie", True, BLACK)
+        self.next_btn_rect  = pygame.Rect(window_width // 2 - self.next_btn_render.get_width() // 2 - 10, window_height - 80, self.next_btn_render.get_width() + 20, self.next_btn_render.get_height() + 10)
 
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
-        ...
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.next_btn_rect.collidepoint(event.pos):
+                events.send_scene_change_event("finish_scene")
     def update(self, dt: float, *args: list, **kwargs: dict):
 
         # player movement handling
@@ -121,8 +129,11 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_ia) == 0 and self.bridge2_people_ia is None:
             self.ia_finished = True
 
-        if self.player_finished and self.ia_finished:
-            events.send_scene_change_event("finish_scene")
+        if self.player_finished and not self.ia_finished:
+            self.has_win = "player"
+
+        elif self.ia_finished and not self.player_finished:
+            self.has_win = "ia"
 
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill((255,255,255)) 
@@ -176,11 +187,39 @@ class PlayScene(Scene):
         draw_surface.blit(self.title_render_player, self.title_render_player.get_rect(center=(window_width // 2, 30)))
         draw_surface.blit(self.title_render_ia, self.title_render_ia.get_rect(center=(window_width // 2, window_height//2 + 30)))
 
+        # WIN text
         if self.player_finished and not self.ia_finished:
+            # black overlay
+            BLACK_SURFACE = pygame.Surface((window_width, window_height//2))
+            BLACK_SURFACE.set_alpha(100)
+            draw_surface.blit(BLACK_SURFACE, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+            # win text
             draw_surface.blit(self.title_win_player, self.title_win_player.get_rect(center=(window_width // 2, window_height//4)))
 
         if self.ia_finished and not self.player_finished:
+            # black overlay
+            BLACK_SURFACE = pygame.Surface((window_width, window_height//2))
+            BLACK_SURFACE.set_alpha(100)
+            draw_surface.blit(BLACK_SURFACE, (0, window_height//2), special_flags=pygame.BLEND_ALPHA_SDL2)
+            # win text
             draw_surface.blit(self.title_win_ia, self.title_win_ia.get_rect(center=(window_width // 2, 3 * window_height//4)))
+
+        # black overlay
+        if self.player_finished and self.ia_finished:
+            BLACK_SURFACE = pygame.Surface((window_width, window_height))
+            BLACK_SURFACE.set_alpha(200)
+            draw_surface.blit(BLACK_SURFACE, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
+
+            if self.has_win == "player":
+                draw_surface.blit(self.title_win_player, self.title_win_player.get_rect(center=(window_width // 2, window_height//2)))
+            elif self.has_win == "ia":
+                draw_surface.blit(self.title_win_ia, self.title_win_ia.get_rect(center=(window_width // 2, window_height//2)))
+            else:
+                draw_surface.blit(self.title_win_draw, self.title_win_draw.get_rect(center=(window_width // 2, window_height//2)))
+
+            # next button
+            pygame.draw.rect(draw_surface, BLUE, self.next_btn_rect, border_radius=5)
+            draw_surface.blit(self.next_btn_render, self.next_btn_render.get_rect(center=self.next_btn_rect.center))
 
     def _draw_bridge(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect):
         #set const

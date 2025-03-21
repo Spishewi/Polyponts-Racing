@@ -13,7 +13,7 @@ class ContributionScene(Scene):
         #init render
         self.title_render = title_font.render("Contributions", True, BLACK)
         self.text_render1 = text_font.render("Ce projet a été réalisé par", True, BLACK)
-        self.text_render2 = text_font.render("Aurèle Aumont--Vesnier, Romain Blaquart.", True, BLACK)
+        self.text_render2 = text_font.render("Aurèle Aumont--Vesnier et Romain Blaquart.", True, BLACK)
         self.text_render3 = text_font.render("Sous la supervision de Jean-Charles Billaut.", True, BLACK)
         self.text_render4 = text_font.render("Crédits:", True, BLACK)
         self.text_render5 = text_font.render("-Font utilisée: m6x11. Réalisée par Daniel Linssen.", True, BLACK)
