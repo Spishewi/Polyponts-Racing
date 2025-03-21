@@ -1,10 +1,7 @@
 from scenes.scene import Scene
 import pygame
 from colors import *
-import events
-from math import floor,pi
 from utils import People, map_value, bridge_parabolla
-from random import randint
 from algorithms.ia import sort_people
 
 class PlayScene(Scene):
