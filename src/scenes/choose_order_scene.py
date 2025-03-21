@@ -27,13 +27,13 @@ class ChooseOrderScene(Scene):
 
         #init button play
         self.play_button_render = self.text_font.render("Jouer !", True, BLACK)
-        self.play_button = pygame.Rect(draw_surface_width // 2 - self.play_button_render.get_width(), draw_surface_height - 80, 120, 60)
+        self.play_button = pygame.Rect(draw_surface_width // 2 - self.play_button_render.get_width()//2, draw_surface_height - 80, 120, 60)
         #init button back
         self.back_button_render = self.text_font.render("Retour", True, BLACK)
         self.back_button = pygame.Rect(10, 10, 100, 50)
 
         #order table renders
-        self.name_label_render = self.text_font.render("Nom fourmi", True, BLACK)
+        self.name_label_render = self.text_font.render("Nom", True, BLACK)
         self.m1_time_render = self.text_font.render("Temps pont 1", True, BLACK)
         self.m2_time_render = self.text_font.render("Temps pont 2", True, BLACK)
 
