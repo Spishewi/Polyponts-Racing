@@ -17,7 +17,7 @@ class MainMenu(Scene):
     def __init__(self, title_font:pygame.Font , button_font:pygame.Font):
         #init of fronts for buttons and title
         self.title_font = title_font
-        self.title_render = title_font.render("Bienvenue dans le jeu!", True, BLACK )
+        self.title_render = title_font.render("Bienvenue dans le jeu !", True, BLACK )
         self.button_font = button_font
         #init of buttons
         self.BORDER_RADIUS_BUTTON = 5
