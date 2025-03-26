@@ -71,8 +71,8 @@ class PlayScene(Scene):
         self.next_btn_render = self.text_font.render("Résumé de la partie", True, BLACK)
         self.next_btn_rect  = pygame.Rect(window_width // 2 - self.next_btn_render.get_width() // 2 - 10, window_height - 80, self.next_btn_render.get_width() + 20, self.next_btn_render.get_height() + 10)
 
-        #chrono 
-        self.clock = pygame.time.Clock()
+        #chrono init
+        self.chrono_start_timestamp = pygame.time.get_ticks()
         self.chrono_player = 0
         self.chrono_ia = 0
         
@@ -140,12 +140,12 @@ class PlayScene(Scene):
             self.has_win = "ia"
 
         #chrono update
-        current_time = self.clock.tick(10) / 1000
+        current_time = (pygame.time.get_ticks() - self.chrono_start_timestamp) / 1000
         if not self.player_finished:
-            self.chrono_player += current_time
+            self.chrono_player = current_time
 
         if not self.ia_finished:
-            self.chrono_ia += current_time
+            self.chrono_ia = current_time
             
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill((255,255,255)) 
@@ -236,10 +236,10 @@ class PlayScene(Scene):
         #draw chronometer
         dx = 100
         dy = 20
-        chrono_render_player = self.text_font.render(f"Chrono: {round(self.chrono_player, 2)}", True, BLACK)
+        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.2f}", True, BLACK)
         draw_surface.blit(chrono_render_player, chrono_render_player.get_rect(center=(window_width-dx, dy)))
 
-        chrono_render_ia = self.text_font.render(f"Chrono: {round(self.chrono_ia, 2)}", True, BLACK)
+        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.2f}", True, BLACK)
         draw_surface.blit(chrono_render_ia, chrono_render_ia.get_rect(center=(window_width-dx, window_height/2+dy)))
     def _draw_bridge(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect):
         #set const
