@@ -14,22 +14,28 @@ class PlayScene(Scene):
         #window dimension
         window_height = pygame.display.get_surface().get_height()
         window_width = pygame.display.get_surface().get_width()
-        dy = 130
-        width_high = window_width//6
-        width_low = window_width//8
+        dy = 160
 
+        #init background image
+        self.background_image = pygame.image.load('./assets/background.png').convert()
+        self.background_image = pygame.transform.smoothscale(self.background_image, (window_width, self.background_image.get_height() * (window_height / self.background_image.get_height())))
+
+        self.background_surface = pygame.Surface((window_width, window_height // 2))
+        self.background_surface.blit(self.background_image, (0, - self.background_image.get_height() // 4))
+
+        del self.background_image
 
         #init start platform
-        self.start_platform_1 = pygame.Rect(0, dy, width_high, window_height/2-dy)
-        self.start_platform_2 = pygame.Rect(0, window_height/2+dy+5, width_high, window_height/2-dy)
+        self.start_platform_1 = pygame.Rect(0, dy, 115, window_height/2-dy)
+        self.start_platform_2 = pygame.Rect(0, window_height/2+dy, 115, window_height/2-dy)
 
         #init mid platform
-        self.mid_platform_1 = pygame.Rect(window_width/2-width_low, dy, width_low, window_height/2-dy)
-        self.mid_platform_2 = pygame.Rect(window_width/2-width_low, window_height/2+dy+5, width_low, window_height/2-dy)
+        self.mid_platform_1 = pygame.Rect(window_width/2-105, dy, 225, window_height/2-dy)
+        self.mid_platform_2 = pygame.Rect(window_width/2-105, window_height/2+dy, 225, window_height/2-dy)
 
         #init finish plateform
-        self.end_platform_1 = pygame.Rect(window_width-width_high, dy, width_high, window_height/2-dy)
-        self.end_platform_2 = pygame.Rect(window_width-width_high, window_height/2+dy+5, width_high, window_height/2-dy )
+        self.end_platform_1 = pygame.Rect(window_width-95, dy, 95, window_height/2-dy)
+        self.end_platform_2 = pygame.Rect(window_width-95, window_height/2+dy, 95, window_height/2-dy )
 
         #init bridge consts
         self.bridge_circle_radius = 5
@@ -75,6 +81,9 @@ class PlayScene(Scene):
         self.chrono_start_timestamp = pygame.time.get_ticks()
         self.chrono_player = 0
         self.chrono_ia = 0
+
+        # people name cache
+        self.people_name_surface_cache = {}
         
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -148,13 +157,17 @@ class PlayScene(Scene):
             self.chrono_ia = current_time
             
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
-        draw_surface.fill((255,255,255)) 
+        draw_surface.fill((255,255,255))
        
         #window dimension and useful things
         window_height = pygame.display.get_surface().get_height()
         window_width = pygame.display.get_surface().get_width()
 
-        #draw background water
+        #draw background
+        draw_surface.blit(self.background_surface, (0, 0))
+        draw_surface.blit(self.background_surface, (0, window_height // 2))
+
+        """#draw background water
         high_water = 250
         water_1 = pygame.Rect(0, high_water, window_width, window_height/2-high_water)
         pygame.draw.rect(draw_surface, BLUE, water_1)
@@ -163,19 +176,20 @@ class PlayScene(Scene):
 
         #draw start platform
         pygame.draw.rect(draw_surface, GREY, self.start_platform_1)
-        pygame.draw.rect(draw_surface, GREY, self.start_platform_2)
+        pygame.draw.rect(draw_surface, GREY, self.start_platform_2)"""
 
         #draw line
         line_middle = pygame.Rect(0, window_height/2, window_width, 5)
         pygame.draw.rect(draw_surface, BLACK, line_middle)
 
+        """
         #draw middle plateform
         pygame.draw.rect(draw_surface, GREY, self.mid_platform_1)
         pygame.draw.rect(draw_surface, GREY, self.mid_platform_2) 
 
         #draw end plateform
         pygame.draw.rect(draw_surface, GREY, self.end_platform_1)
-        pygame.draw.rect(draw_surface, GREY, self.end_platform_2)
+        pygame.draw.rect(draw_surface, GREY, self.end_platform_2)"""
 
         #draw bridge
         self._draw_bridge(draw_surface, self.start_platform_1, self.mid_platform_1)
@@ -186,14 +200,14 @@ class PlayScene(Scene):
 
         #draw People
         if len(self.bridge1_list_people_player) > 0:
-            self._draw_people(draw_surface, self.start_platform_1, self.mid_platform_1, self.bridge1_list_people_player[0].m1_time, self.bridge1_current_time_player)
+            self._draw_people(draw_surface, self.start_platform_1, self.mid_platform_1, self.bridge1_list_people_player[0].m1_time, self.bridge1_current_time_player, self.bridge1_list_people_player[0].id_number)
         if len(self.bridge1_list_people_ia) > 0:
-            self._draw_people(draw_surface, self.start_platform_2, self.mid_platform_2, self.bridge1_list_people_ia[0].m1_time, self.bridge1_current_time_ia)
+            self._draw_people(draw_surface, self.start_platform_2, self.mid_platform_2, self.bridge1_list_people_ia[0].m1_time, self.bridge1_current_time_ia, self.bridge1_list_people_ia[0].id_number)
 
         if self.bridge2_people_player is not None:
-            self._draw_people(draw_surface, self.mid_platform_1, self.end_platform_1, self.bridge2_people_player.m2_time, self.bridge2_current_time_player)
+            self._draw_people(draw_surface, self.mid_platform_1, self.end_platform_1, self.bridge2_people_player.m2_time, self.bridge2_current_time_player, self.bridge2_people_player.id_number)
         if self.bridge2_people_ia is not None:
-            self._draw_people(draw_surface, self.mid_platform_2, self.end_platform_2, self.bridge2_people_ia.m2_time, self.bridge2_current_time_ia)
+            self._draw_people(draw_surface, self.mid_platform_2, self.end_platform_2, self.bridge2_people_ia.m2_time, self.bridge2_current_time_ia, self.bridge2_people_ia.id_number)
 
 
         draw_surface.blit(self.title_render_player, self.title_render_player.get_rect(center=(window_width // 2, 30)))
@@ -250,7 +264,7 @@ class PlayScene(Scene):
             y = start_plateform.top + self.bridge_circle_radius // 2 + bridge_parabolla(self.bridge_height, map_value(i, start_plateform.right, end_plateform.left, 0, 1)) * scaley
             pygame.draw.circle(draw_surface, BROWN, (i, y), self.bridge_circle_radius)
             
-    def _draw_people(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect, m_time: float, current_time: float):
+    def _draw_people(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect, m_time: float, current_time: float, people_id: int):
         #set const
         people_rect = pygame.Rect(0, 0, 20, 40)
 
@@ -268,4 +282,14 @@ class PlayScene(Scene):
         else:
             people_rect.bottom = start_plateform.top
 
+        people_name_surface = self._get_people_name_surface(people_id)
+        draw_surface.blit(people_name_surface, people_name_surface.get_rect(center=pygame.Vector2(people_rect.center) + pygame.Vector2(0, -50)))
         pygame.draw.rect(draw_surface, BLUE, people_rect)
+
+    def _get_people_name_surface(self, id_number: int):
+        if id_number in self.people_name_surface_cache:
+            return self.people_name_surface_cache[id_number]
+        else:
+            people_name_surface = self.text_font.render(chr(ord("A") + id_number - 1), True, BLACK)
+            self.people_name_surface_cache[id_number] = people_name_surface
+            return people_name_surface
