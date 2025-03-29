@@ -95,7 +95,7 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_player) != 0:
             # someone is walking on the player bridge 1
             if self.bridge1_current_time_player < self.bridge1_list_people_player[0].m1_time:
-                self.bridge1_current_time_player += dt * 10
+                self.bridge1_current_time_player += dt * 15
 
             # someone has finished walking on the bridge 1
             else:
@@ -104,7 +104,7 @@ class PlayScene(Scene):
 
         if len(self.bridge2_list_people_player) != 0:
             if self.bridge2_current_time_player < self.bridge2_list_people_player[0].m2_time:
-                self.bridge2_current_time_player += dt * 10
+                self.bridge2_current_time_player += dt * 15
             else:
                 self.bridge2_list_people_player.pop(0)
                 self.bridge2_current_time_player = 0
@@ -113,14 +113,14 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_ia) != 0:
             # someone is walking on the ia bridge 1
             if self.bridge1_current_time_ia < self.bridge1_list_people_ia[0].m1_time:
-                self.bridge1_current_time_ia += dt * 10
+                self.bridge1_current_time_ia += dt * 15
             else:
                 self.bridge2_list_people_ia.append(self.bridge1_list_people_ia.pop(0))
                 self.bridge1_current_time_ia = 0
         
         if len(self.bridge2_list_people_ia) != 0:
             if self.bridge2_current_time_ia < self.bridge2_list_people_ia[0].m2_time:
-                self.bridge2_current_time_ia += dt * 10
+                self.bridge2_current_time_ia += dt * 15
             else:
                 self.bridge2_list_people_ia.pop(0)
                 self.bridge2_current_time_ia = 0
