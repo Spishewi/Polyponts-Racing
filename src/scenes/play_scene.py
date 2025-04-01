@@ -14,22 +14,28 @@ class PlayScene(Scene):
         #window dimension
         window_height = pygame.display.get_surface().get_height()
         window_width = pygame.display.get_surface().get_width()
-        dy = 130
-        width_high = window_width//6
-        width_low = window_width//8
+        dy = 160
 
+        #init background image
+        self.background_image = pygame.image.load('./assets/background.png').convert()
+        self.background_image = pygame.transform.smoothscale(self.background_image, (window_width, self.background_image.get_height() * (window_height / self.background_image.get_height())))
+
+        self.background_surface = pygame.Surface((window_width, window_height // 2))
+        self.background_surface.blit(self.background_image, (0, - self.background_image.get_height() // 4))
+
+        del self.background_image
 
         #init start platform
-        self.start_platform_1 = pygame.Rect(0, dy, width_high, window_height/2-dy)
-        self.start_platform_2 = pygame.Rect(0, window_height/2+dy+5, width_high, window_height/2-dy)
+        self.start_platform_1 = pygame.Rect(0, dy, 115, window_height/2-dy)
+        self.start_platform_2 = pygame.Rect(0, window_height/2+dy, 115, window_height/2-dy)
 
         #init mid platform
-        self.mid_platform_1 = pygame.Rect(window_width/2-width_low, dy, width_low, window_height/2-dy)
-        self.mid_platform_2 = pygame.Rect(window_width/2-width_low, window_height/2+dy+5, width_low, window_height/2-dy)
+        self.mid_platform_1 = pygame.Rect(window_width/2-105, dy, 225, window_height/2-dy)
+        self.mid_platform_2 = pygame.Rect(window_width/2-105, window_height/2+dy, 225, window_height/2-dy)
 
         #init finish plateform
-        self.end_platform_1 = pygame.Rect(window_width-width_high, dy, width_high, window_height/2-dy)
-        self.end_platform_2 = pygame.Rect(window_width-width_high, window_height/2+dy+5, width_high, window_height/2-dy )
+        self.end_platform_1 = pygame.Rect(window_width-95, dy, 95, window_height/2-dy)
+        self.end_platform_2 = pygame.Rect(window_width-95, window_height/2+dy, 95, window_height/2-dy )
 
         #init bridge consts
         self.bridge_circle_radius = 5
@@ -38,9 +44,9 @@ class PlayScene(Scene):
 
         #init list people
         self.bridge1_list_people_ia = sort_people(people_list, difficulty)
-        self.bridge2_people_ia = None
+        self.bridge2_list_people_ia = []
         self.bridge1_list_people_player = people_list
-        self.bridge2_people_player = None
+        self.bridge2_list_people_player = []
 
         self.bridge1_current_time_ia = 0
         self.bridge2_current_time_ia = 0
@@ -75,6 +81,9 @@ class PlayScene(Scene):
         self.chrono_start_timestamp = pygame.time.get_ticks()
         self.chrono_player = 0
         self.chrono_ia = 0
+
+        # people name cache
+        self.people_name_surface_cache = {}
         
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -86,51 +95,41 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_player) != 0:
             # someone is walking on the player bridge 1
             if self.bridge1_current_time_player < self.bridge1_list_people_player[0].m1_time:
-                self.bridge1_current_time_player += dt * 10
+                self.bridge1_current_time_player += dt * 15
 
-            # someone has finished walking on the bridge 1 and bridge 2 is free
-            elif self.bridge2_people_player is None:
-                self.bridge2_people_player = self.bridge1_list_people_player.pop(0)
+            # someone has finished walking on the bridge 1
+            else:
+                self.bridge2_list_people_player.append(self.bridge1_list_people_player.pop(0))
                 self.bridge1_current_time_player = 0
 
+        if len(self.bridge2_list_people_player) != 0:
+            if self.bridge2_current_time_player < self.bridge2_list_people_player[0].m2_time:
+                self.bridge2_current_time_player += dt * 15
             else:
-                # wait for the people on bridge 2 to finish
-                self.bridge1_current_time_player = self.bridge1_list_people_player[0].m1_time
-
-        if self.bridge2_people_player is not None:
-            if self.bridge2_current_time_player < self.bridge2_people_player.m2_time:
-                self.bridge2_current_time_player += dt * 10
-            else:
-                self.bridge2_people_player = None
+                self.bridge2_list_people_player.pop(0)
                 self.bridge2_current_time_player = 0
 
         # ia movement handling
         if len(self.bridge1_list_people_ia) != 0:
             # someone is walking on the ia bridge 1
             if self.bridge1_current_time_ia < self.bridge1_list_people_ia[0].m1_time:
-                self.bridge1_current_time_ia += dt * 10
-
-            # someone has finished walking on the bridge 1 and bridge 2 is free
-            elif self.bridge2_people_ia is None:
-                self.bridge2_people_ia = self.bridge1_list_people_ia.pop(0)
+                self.bridge1_current_time_ia += dt * 15
+            else:
+                self.bridge2_list_people_ia.append(self.bridge1_list_people_ia.pop(0))
                 self.bridge1_current_time_ia = 0
-
-            else:
-                # wait for the people on bridge 2 to finish 
-                self.bridge1_current_time_ia = self.bridge1_list_people_ia[0].m1_time
         
-        if self.bridge2_people_ia is not None:
-            if self.bridge2_current_time_ia < self.bridge2_people_ia.m2_time:
-                self.bridge2_current_time_ia += dt * 10
+        if len(self.bridge2_list_people_ia) != 0:
+            if self.bridge2_current_time_ia < self.bridge2_list_people_ia[0].m2_time:
+                self.bridge2_current_time_ia += dt * 15
             else:
-                self.bridge2_people_ia = None
+                self.bridge2_list_people_ia.pop(0)
                 self.bridge2_current_time_ia = 0
 
         # check if the game is over
-        if len(self.bridge1_list_people_player) == 0 and self.bridge2_people_player is None:
+        if len(self.bridge1_list_people_player) == 0 and len(self.bridge2_list_people_player) == 0:
             self.player_finished = True
 
-        if len(self.bridge1_list_people_ia) == 0 and self.bridge2_people_ia is None:
+        if len(self.bridge1_list_people_ia) == 0 and len(self.bridge2_list_people_ia) == 0:
             self.ia_finished = True
 
         if self.player_finished and not self.ia_finished:
@@ -148,13 +147,17 @@ class PlayScene(Scene):
             self.chrono_ia = current_time
             
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
-        draw_surface.fill((255,255,255)) 
+        draw_surface.fill((255,255,255))
        
         #window dimension and useful things
         window_height = pygame.display.get_surface().get_height()
         window_width = pygame.display.get_surface().get_width()
 
-        #draw background water
+        #draw background
+        draw_surface.blit(self.background_surface, (0, 0))
+        draw_surface.blit(self.background_surface, (0, window_height // 2))
+
+        """#draw background water
         high_water = 250
         water_1 = pygame.Rect(0, high_water, window_width, window_height/2-high_water)
         pygame.draw.rect(draw_surface, BLUE, water_1)
@@ -163,19 +166,20 @@ class PlayScene(Scene):
 
         #draw start platform
         pygame.draw.rect(draw_surface, GREY, self.start_platform_1)
-        pygame.draw.rect(draw_surface, GREY, self.start_platform_2)
+        pygame.draw.rect(draw_surface, GREY, self.start_platform_2)"""
 
         #draw line
         line_middle = pygame.Rect(0, window_height/2, window_width, 5)
         pygame.draw.rect(draw_surface, BLACK, line_middle)
 
+        """
         #draw middle plateform
         pygame.draw.rect(draw_surface, GREY, self.mid_platform_1)
         pygame.draw.rect(draw_surface, GREY, self.mid_platform_2) 
 
         #draw end plateform
         pygame.draw.rect(draw_surface, GREY, self.end_platform_1)
-        pygame.draw.rect(draw_surface, GREY, self.end_platform_2)
+        pygame.draw.rect(draw_surface, GREY, self.end_platform_2)"""
 
         #draw bridge
         self._draw_bridge(draw_surface, self.start_platform_1, self.mid_platform_1)
@@ -186,15 +190,20 @@ class PlayScene(Scene):
 
         #draw People
         if len(self.bridge1_list_people_player) > 0:
-            self._draw_people(draw_surface, self.start_platform_1, self.mid_platform_1, self.bridge1_list_people_player[0].m1_time, self.bridge1_current_time_player)
+            self._draw_people(draw_surface, self.start_platform_1, self.mid_platform_1, self.bridge1_list_people_player[0].m1_time, self.bridge1_current_time_player, self.bridge1_list_people_player[0].id_number)
         if len(self.bridge1_list_people_ia) > 0:
-            self._draw_people(draw_surface, self.start_platform_2, self.mid_platform_2, self.bridge1_list_people_ia[0].m1_time, self.bridge1_current_time_ia)
+            self._draw_people(draw_surface, self.start_platform_2, self.mid_platform_2, self.bridge1_list_people_ia[0].m1_time, self.bridge1_current_time_ia, self.bridge1_list_people_ia[0].id_number)
 
-        if self.bridge2_people_player is not None:
-            self._draw_people(draw_surface, self.mid_platform_1, self.end_platform_1, self.bridge2_people_player.m2_time, self.bridge2_current_time_player)
-        if self.bridge2_people_ia is not None:
-            self._draw_people(draw_surface, self.mid_platform_2, self.end_platform_2, self.bridge2_people_ia.m2_time, self.bridge2_current_time_ia)
+        if len(self.bridge2_list_people_player) > 0:
+            self._draw_people(draw_surface, self.mid_platform_1, self.end_platform_1, self.bridge2_list_people_player[0].m2_time, self.bridge2_current_time_player, self.bridge2_list_people_player[0].id_number)
+        if len(self.bridge2_list_people_ia) > 0:
+            self._draw_people(draw_surface, self.mid_platform_2, self.end_platform_2, self.bridge2_list_people_ia[0].m2_time, self.bridge2_current_time_ia, self.bridge2_list_people_ia[0].id_number)
 
+        #draw queue
+        self._draw_queue(draw_surface, self.start_platform_1, self.bridge1_list_people_player)
+        self._draw_queue(draw_surface, self.mid_platform_1, self.bridge2_list_people_player)
+        self._draw_queue(draw_surface, self.start_platform_2, self.bridge1_list_people_ia)
+        self._draw_queue(draw_surface, self.mid_platform_2, self.bridge2_list_people_ia)
 
         draw_surface.blit(self.title_render_player, self.title_render_player.get_rect(center=(window_width // 2, 30)))
         draw_surface.blit(self.title_render_ia, self.title_render_ia.get_rect(center=(window_width // 2, window_height//2 + 30)))
@@ -250,22 +259,43 @@ class PlayScene(Scene):
             y = start_plateform.top + self.bridge_circle_radius // 2 + bridge_parabolla(self.bridge_height, map_value(i, start_plateform.right, end_plateform.left, 0, 1)) * scaley
             pygame.draw.circle(draw_surface, BROWN, (i, y), self.bridge_circle_radius)
             
-    def _draw_people(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect, m_time: float, current_time: float):
+    def _draw_people(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect, m_time: float, current_time: float, people_id: int):
         #set const
         people_rect = pygame.Rect(0, 0, 20, 40)
-
-        end_parabolla_percentage = (end_plateform.left - start_plateform.right)/(end_plateform.right - start_plateform.right)
         people_percentage = current_time/m_time
 
-        people_rect.centerx = map_value(current_time, 0, m_time, start_plateform.right, end_plateform.right)
+        people_rect.centerx = map_value(current_time, 0, m_time, start_plateform.right, end_plateform.left)
 
         # on the bridge
-        if people_percentage < end_parabolla_percentage:
-            scaley = end_plateform.left - start_plateform.right
-            people_rect.bottom = start_plateform.top + bridge_parabolla(self.bridge_height, map_value(people_rect.centerx, start_plateform.right, end_plateform.left, 0, 1)) * scaley
+        scaley = end_plateform.left - start_plateform.right
+        people_rect.bottom = start_plateform.top + bridge_parabolla(self.bridge_height, map_value(people_rect.centerx, start_plateform.right, end_plateform.left, 0, 1)) * scaley
+
+        people_name_surface = self._get_people_name_surface(people_id)
+        draw_surface.blit(people_name_surface, people_name_surface.get_rect(center=pygame.Vector2(people_rect.center) + pygame.Vector2(0, -50)))
+        pygame.draw.rect(draw_surface, BLUE, people_rect)
+
+    def _draw_queue(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, queue: list):
+        #set const
+        people_rect = pygame.Rect(0, 0, 20, 40)
+        spacing = 15
+
+        if len(queue) <= 1:
+            return
         
-        # after the bridge
-        else:
+        # draw waiting people
+        for i in range(len(queue)-1 , 0, -1):
+            people_id = queue[i].id_number
+
+            people_rect.centerx = start_plateform.right - i * spacing
             people_rect.bottom = start_plateform.top
 
-        pygame.draw.rect(draw_surface, BLUE, people_rect)
+            people_name_surface = self._get_people_name_surface(people_id)
+            draw_surface.blit(people_name_surface, people_name_surface.get_rect(center=pygame.Vector2(people_rect.center) + pygame.Vector2(0, -50)))
+            pygame.draw.rect(draw_surface, BLUE, people_rect)
+    def _get_people_name_surface(self, id_number: int):
+        if id_number in self.people_name_surface_cache:
+            return self.people_name_surface_cache[id_number]
+        else:
+            people_name_surface = self.text_font.render(chr(ord("A") + id_number - 1), True, BLACK)
+            self.people_name_surface_cache[id_number] = people_name_surface
+            return people_name_surface

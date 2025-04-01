@@ -2,6 +2,7 @@
 
 import asyncio
 import pygame
+import sys
 
 #from scenes.mainmenu import MainMenu
 from scenes.choose_number_scene import ChooseNumberScene
@@ -14,6 +15,11 @@ from scenes.contribution_scene import ContributionScene
 from utils import People
 import events
 # Try to declare all your globals at once to facilitate compilation later.
+
+if sys.platform == 'emscripten':
+    PLATFORM = "wasm"
+else:
+    PLATFORM = "desktop"
 RUNNING = True
 
 LASTFRAME = 0
@@ -34,6 +40,8 @@ GLOBAL_TEXT_FONT = pygame.font.Font("./assets/fonts/m6x11plus.ttf", TEXT_FONT_SI
 #current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,1,1)])
 current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
 
+clock = pygame.time.Clock()
+
 
 # Load any assets right now to avoid lag at runtime or network errors.
 
@@ -47,13 +55,13 @@ async def main():
 
     while RUNNING:
         # calculate delta time
-        dt = (pygame.time.get_ticks() - LASTFRAME) / 1000
-
+        if PLATFORM == "wasm":
+            dt = (pygame.time.get_ticks() - LASTFRAME) / 1000
+            LASTFRAME = pygame.time.get_ticks()
+        else:
+            dt = clock.tick(120) / 1000
         # prevent too big delta time (lagspikes)
         dt = min(dt, 0.5)
-        dt = max(dt, 1/240)
-
-        LASTFRAME = pygame.time.get_ticks()
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
