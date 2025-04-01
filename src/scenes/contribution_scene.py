@@ -24,8 +24,10 @@ class ContributionScene(Scene):
 
         #init link button
         self.link_button_render = self.text_font.render("Lien github", True, BLACK)
-        self.link_button = pygame.Rect(20, 20, 160, 70)
+        self.link_button = pygame.Rect(20, 20, 250, 70)
 
+        #github logo
+        self.github = pygame.image.load('./assets/icons/github.png')
         ...
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
@@ -59,7 +61,17 @@ class ContributionScene(Scene):
         draw_surface.blit(self.text_render5, self.text_render5.get_rect(center=(window_width // 2, y_start + 5 * y_gap)))
 
         #draw link button
-        self.link_button.centerx = window_width // 2
+        self.link_button.centerx = window_width // 2 
         self.link_button.centery = window_height - 140
         pygame.draw.rect(draw_surface, CARIBBEAN_CURRENT, self.link_button, border_radius=5)
-        draw_surface.blit(self.link_button_render, self.link_button_render.get_rect(center=self.link_button.center))
+        
+        total_width = self.link_button_render.get_width() + self.github.get_width() + 10 
+        text_x = self.link_button.centerx - total_width // 2
+        image_x = text_x + self.link_button_render.get_width() + 10
+
+        text_y = self.link_button.centery - self.link_button_render.get_height() // 2
+        image_y = self.link_button.centery - self.github.get_height() // 2
+
+        draw_surface.blit(self.link_button_render, (text_x, text_y))
+        draw_surface.blit(self.github, (image_x, image_y))
+   
