@@ -31,7 +31,7 @@ pygame.init()
 TITLE_FONT_SIZE = 54
 TEXT_FONT_SIZE = 36
 
-
+pygame.display.set_caption("Polyponts Racing")
 screen = pygame.display.set_mode((800, 600))
 
 GLOBAL_TITLE_FONT = pygame.font.Font("./assets/fonts/m6x11plus.ttf", TITLE_FONT_SIZE)
