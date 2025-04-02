@@ -20,6 +20,7 @@ if sys.platform == 'emscripten':
     PLATFORM = "wasm"
 else:
     PLATFORM = "desktop"
+    
 RUNNING = True
 
 LASTFRAME = 0
