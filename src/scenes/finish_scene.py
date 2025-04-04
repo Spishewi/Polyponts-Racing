@@ -39,9 +39,29 @@ class FinishScene(Scene):
 
         #init text column
         self.final_time_render = text_font.render("Temps final", True, BLACK)
+        self.diff_time_render1 = text_font.render("Différence", True, BLACK)
+        self.diff_time_render2 = text_font.render("de temps", True, BLACK)
         self.people_remaning1 = text_font.render("Nombre de", True, BLACK)
         self.people_remaning2 = text_font.render("personnes ", True, BLACK)
         self.people_remaning3 = text_font.render("restantes", True, BLACK)
+
+        #init grid value
+        self.final_time = (10, 15)
+        self.number_people = (0, 2)
+        if self.final_time[0] <= self.final_time[1]:
+            self.final_time_render_player = text_font.render(str(self.final_time[0])+"s", True, GREEN)
+            self.final_time_render_ia = text_font.render(str(self.final_time[1])+"s", True, RED)
+            self.diff_time_player_render = text_font.render(str(0), True, GREEN)
+            self.diff_time_ia_render = text_font.render("+"+str(self.final_time[1] - self.final_time[0]), True, RED)
+            
+        else:
+            self.final_time_render_player = text_font.render(str(self.final_time[0])+"s", True, RED)
+            self.final_time_render_ia = text_font.render(str(self.final_time[1])+"s", True, GREEN)
+            self.diff_time_player_render = text_font.render("+"+str(self.final_time[0] - self.final_time[2])+"s", True, RED)
+            self.diff_time_ia_render = text_font.render(str(0), True, GREEN)
+        
+        self.number_people_player_render = text_font.render(str(self.number_people[0]), True, BLACK)
+        self.number_people_ia_render = text_font.render(str(self.number_people[1]), True, BLACK) 
 
 
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
@@ -113,10 +133,18 @@ class FinishScene(Scene):
         self._draw_grid_content(draw_surface, [self.ia_render], (self.grid.x, first_line_row+row_spacing ), column_spacing, row_spacing)
 
         #draw text of the columns
-        self._draw_grid_content(draw_surface, [self.final_time_render], (first_line_column, self.grid.y), column_spacing, first_line_row-self.grid.y)
-        self._draw_grid_content(draw_surface, [self.people_remaning1,self.people_remaning2,self.people_remaning3], (first_line_column+column_spacing, self.grid.y), column_spacing,first_line_row-self.grid.y)
-    
-    
+        self._draw_grid_content(draw_surface, [self.final_time_render], (first_line_column, self.grid.y), column_spacing, row_spacing )
+        self._draw_grid_content(draw_surface, [self.diff_time_render1, self.diff_time_render2], (first_line_column+column_spacing, self.grid.y), column_spacing, row_spacing)
+        self._draw_grid_content(draw_surface, [self.people_remaning1,self.people_remaning2,self.people_remaning3], (first_line_column+column_spacing*2, self.grid.y), column_spacing, row_spacing)
+
+        #draw values of the grid
+        self._draw_grid_content(draw_surface,[self.final_time_render_player], (first_line_column, first_line_row), column_spacing, row_spacing)
+        self._draw_grid_content(draw_surface, [self.final_time_render_ia], (first_line_column, first_line_row+row_spacing), column_spacing, row_spacing)
+        self._draw_grid_content(draw_surface, [self.diff_time_player_render], (first_line_column+column_spacing, first_line_row), column_spacing, row_spacing)
+        self._draw_grid_content(draw_surface, [self.diff_time_ia_render], (first_line_column+column_spacing, first_line_row+row_spacing), column_spacing, row_spacing)
+        self._draw_grid_content(draw_surface, [self.number_people_player_render], (first_line_column+column_spacing*2, first_line_row), column_spacing, row_spacing)
+        self._draw_grid_content(draw_surface, [self.number_people_ia_render], (first_line_column+column_spacing*2, first_line_row+row_spacing), column_spacing, row_spacing)
+   
     def _draw_grid_content(self, draw_surface, text_render:list[pygame.Surface], top_position:tuple[int, int], width_rect:int, height_rect:int):
         #calculate the center of the rect
         center_x = top_position[0] + width_rect / 2

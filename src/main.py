@@ -38,7 +38,7 @@ GLOBAL_TITLE_FONT = pygame.font.Font("./assets/fonts/m6x11plus.ttf", TITLE_FONT_
 GLOBAL_TEXT_FONT = pygame.font.Font("./assets/fonts/m6x11plus.ttf", TEXT_FONT_SIZE)
 
 #current_scene = PlayScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT, 4, [People(1,1,1)])
-current_scene = FinishScene(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
+current_scene = MainMenu(GLOBAL_TITLE_FONT, GLOBAL_TEXT_FONT)
 
 clock = pygame.time.Clock()
 
