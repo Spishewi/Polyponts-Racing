@@ -5,7 +5,7 @@ import events
 
 class FinishScene(Scene):
 
-    def __init__(self, title_font: pygame.Font, text_font: pygame.Font):
+    def __init__(self, title_font: pygame.Font, text_font: pygame.Font, final_time: tuple[int, int], number_people: tuple[int, int], has_win: str):
         window_width = pygame.display.get_surface().get_width()
         window_height = pygame.display.get_surface().get_height()
 
@@ -21,7 +21,6 @@ class FinishScene(Scene):
         self.finish_button = pygame.Rect(window_width//2-self.button_render.get_width()/2, window_height-120, window_width/6, window_width/10)
         
         #init win render
-        has_win = "player"
         if has_win == "player":
             has_win ="gagné"
         else:
@@ -46,8 +45,9 @@ class FinishScene(Scene):
         self.people_remaning3 = text_font.render("restantes", True, BLACK)
 
         #init grid value
-        self.final_time = (10, 15)
-        self.number_people = (0, 2)
+        self.final_time = final_time
+        self.number_people = number_people
+
         if self.final_time[0] <= self.final_time[1]:
             self.final_time_render_player = text_font.render(f"{self.final_time[0]:.2f}s", True, GREEN)
             self.final_time_render_ia = text_font.render(f"{self.final_time[1]:.2f}s", True, RED)

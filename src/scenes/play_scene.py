@@ -56,6 +56,7 @@ class PlayScene(Scene):
         self.player_finished = False
         self.ia_finished = False
         self.has_win = None
+        self.remaining_people = None
 
         #init people rect
         high_figure = 30
@@ -87,8 +88,8 @@ class PlayScene(Scene):
         
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.next_btn_rect.collidepoint(event.pos):
-                events.send_scene_change_event("finish_scene")
+            if self.next_btn_rect.collidepoint(event.pos) and self.player_finished and self.ia_finished:
+                events.send_scene_change_event("finish_scene", {"final_time": (self.chrono_player, self.chrono_ia), "number_people": self.remaining_people, "has_win": self.has_win})
     def update(self, dt: float, *args: list, **kwargs: dict):
 
         # player movement handling
@@ -134,9 +135,11 @@ class PlayScene(Scene):
 
         if self.player_finished and not self.ia_finished:
             self.has_win = "player"
+            self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
 
         elif self.ia_finished and not self.player_finished:
             self.has_win = "ia"
+            self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
 
         #chrono update
         current_time = (pygame.time.get_ticks() - self.chrono_start_timestamp) / 1000
