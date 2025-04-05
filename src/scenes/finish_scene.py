@@ -49,16 +49,16 @@ class FinishScene(Scene):
         self.final_time = (10, 15)
         self.number_people = (0, 2)
         if self.final_time[0] <= self.final_time[1]:
-            self.final_time_render_player = text_font.render(str(self.final_time[0])+"s", True, GREEN)
-            self.final_time_render_ia = text_font.render(str(self.final_time[1])+"s", True, RED)
-            self.diff_time_player_render = text_font.render(str(0), True, GREEN)
-            self.diff_time_ia_render = text_font.render("+"+str(self.final_time[1] - self.final_time[0]), True, RED)
+            self.final_time_render_player = text_font.render(f"{self.final_time[0]:.2f}s", True, GREEN)
+            self.final_time_render_ia = text_font.render(f"{self.final_time[1]:.2f}s", True, RED)
+            self.diff_time_player_render = text_font.render("0", True, GREEN)
+            self.diff_time_ia_render = text_font.render(f"+{(self.final_time[1] - self.final_time[0]):.2f}s", True, RED)
             
         else:
-            self.final_time_render_player = text_font.render(str(self.final_time[0])+"s", True, RED)
-            self.final_time_render_ia = text_font.render(str(self.final_time[1])+"s", True, GREEN)
-            self.diff_time_player_render = text_font.render("+"+str(self.final_time[0] - self.final_time[2])+"s", True, RED)
-            self.diff_time_ia_render = text_font.render(str(0), True, GREEN)
+            self.final_time_render_player = text_font.render(f"{self.final_time[0]:.2f}s", True, RED)
+            self.final_time_render_ia = text_font.render(f"{self.final_time[1]:.2f}s", True, GREEN)
+            self.diff_time_player_render = text_font.render(f"+{(self.final_time[0] - self.final_time[1]):.2f}s", True, RED)
+            self.diff_time_ia_render = text_font.render("0", True, GREEN)
         
         self.number_people_player_render = text_font.render(str(self.number_people[0]), True, BLACK)
         self.number_people_ia_render = text_font.render(str(self.number_people[1]), True, BLACK) 
