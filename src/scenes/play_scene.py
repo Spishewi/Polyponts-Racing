@@ -30,12 +30,12 @@ class PlayScene(Scene):
         self.start_platform_2 = pygame.Rect(0, window_height/2+dy, 115, window_height/2-dy)
 
         #init mid platform
-        self.mid_platform_1 = pygame.Rect(window_width/2-105, dy, 225, window_height/2-dy)
-        self.mid_platform_2 = pygame.Rect(window_width/2-105, window_height/2+dy, 225, window_height/2-dy)
+        self.mid_platform_1 = pygame.Rect(window_width/2-100, dy, 222, window_height/2-dy)
+        self.mid_platform_2 = pygame.Rect(window_width/2-100, window_height/2+dy, 222, window_height/2-dy)
 
         #init finish plateform
-        self.end_platform_1 = pygame.Rect(window_width-95, dy, 95, window_height/2-dy)
-        self.end_platform_2 = pygame.Rect(window_width-95, window_height/2+dy, 95, window_height/2-dy )
+        self.end_platform_1 = pygame.Rect(window_width-90, dy, 100, window_height/2-dy)
+        self.end_platform_2 = pygame.Rect(window_width-90, window_height/2+dy, 100, window_height/2-dy)
 
         #init bridge consts
         self.bridge_circle_radius = 5
