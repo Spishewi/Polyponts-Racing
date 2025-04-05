@@ -1,7 +1,7 @@
 from scenes.scene import Scene
 import pygame
 from colors import *
-from utils import People, map_value, bridge_parabolla
+from utils import People, map_value, bridge_parabolla, load_animation, RunningState
 from algorithms.ia import sort_people
 import events
 
@@ -24,6 +24,10 @@ class PlayScene(Scene):
         self.background_surface.blit(self.background_image, (0, - self.background_image.get_height() // 4))
 
         del self.background_image
+
+        #init people image
+        self.people_idle_frames = load_animation('./assets/idle/', 12, height=60, flip_x=True)
+        self.people_run_frames = load_animation('./assets/run/', 10, height=60, flip_x=True)
 
         #init start platform
         self.start_platform_1 = pygame.Rect(0, dy, 115, window_height/2-dy)
@@ -264,8 +268,9 @@ class PlayScene(Scene):
             
     def _draw_people(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect, m_time: float, current_time: float, people_id: int):
         #set const
-        people_rect = pygame.Rect(0, 0, 20, 40)
-        people_percentage = current_time/m_time
+        people_frame = self._get_people_animation_frame(people_id, RunningState.RUNNING)
+
+        people_rect = people_frame.get_rect()
 
         people_rect.centerx = map_value(current_time, 0, m_time, start_plateform.right, end_plateform.left)
 
@@ -274,12 +279,23 @@ class PlayScene(Scene):
         people_rect.bottom = start_plateform.top + bridge_parabolla(self.bridge_height, map_value(people_rect.centerx, start_plateform.right, end_plateform.left, 0, 1)) * scaley
 
         people_name_surface = self._get_people_name_surface(people_id)
+        people_frame = self._get_people_animation_frame(people_id, RunningState.RUNNING)
+        draw_surface.blit(people_frame, (people_rect.x, people_rect.y + 10))
         draw_surface.blit(people_name_surface, people_name_surface.get_rect(center=pygame.Vector2(people_rect.center) + pygame.Vector2(0, -50)))
-        pygame.draw.rect(draw_surface, BLUE, people_rect)
 
+
+    def _get_people_animation_frame(self, people_id: int, running_state: RunningState):
+        ticks = pygame.time.get_ticks()
+        if running_state == RunningState.RUNNING:
+            frame_number = (ticks // 100 + people_id) % len(self.people_run_frames)
+            frame = self.people_run_frames[frame_number]
+        else:
+            frame_number = (ticks // 100 + people_id) % len(self.people_idle_frames)
+            frame = self.people_idle_frames[frame_number]
+
+        return frame
     def _draw_queue(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, queue: list):
         #set const
-        people_rect = pygame.Rect(0, 0, 20, 40)
         spacing = 15
 
         if len(queue) <= 1:
@@ -289,12 +305,16 @@ class PlayScene(Scene):
         for i in range(len(queue)-1 , 0, -1):
             people_id = queue[i].id_number
 
+            people_frame = self._get_people_animation_frame(people_id, RunningState.IDLE)
+            people_rect = people_frame.get_rect()
+
             people_rect.centerx = start_plateform.right - i * spacing
             people_rect.bottom = start_plateform.top
 
             people_name_surface = self._get_people_name_surface(people_id)
+
+            draw_surface.blit(people_frame, (people_rect.x, people_rect.y + 10))
             draw_surface.blit(people_name_surface, people_name_surface.get_rect(center=pygame.Vector2(people_rect.center) + pygame.Vector2(0, -50)))
-            pygame.draw.rect(draw_surface, BLUE, people_rect)
     def _get_people_name_surface(self, id_number: int):
         if id_number in self.people_name_surface_cache:
             return self.people_name_surface_cache[id_number]
