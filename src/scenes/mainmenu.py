@@ -57,7 +57,7 @@ class MainMenu(Scene):
         window_width = pygame.display.get_surface().get_width()
         window_height = pygame.display.get_surface().get_height()
         #draw main title
-        title_width = draw_surface.get_width() //2
+        title_width = draw_surface.get_width() // 2
         draw_surface.blit(self.title_render, self.title_render.get_rect(center=(title_width, 35)))
         
         #draw button easy

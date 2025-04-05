@@ -18,14 +18,15 @@ class FinishScene(Scene):
 
         #init button finish
         self.button_render = text_font.render("Rejouer", True, BLACK)
-        self.finish_button = pygame.Rect(window_width//2-self.button_render.get_width()/2, window_height-120, window_width/6, window_width/10)
+        self.finish_button = pygame.Rect(window_width//2-self.button_render.get_width()/2, window_height-120, self.button_render.get_width() + 40, self.button_render.get_height() + 20)
         
         #init win render
         if has_win == "player":
-            has_win ="gagné"
+            self.has_win_render = text_font.render("Vous avez gagné", True, BLACK)
+        elif has_win == "ia":
+            self.has_win_render = text_font.render("Vous avez perdu", True, BLACK)
         else:
-            has_win = "perdu"
-        self.has_win_render = text_font.render(f"Vous avez {has_win}", True, BLACK)
+            self.has_win_render = text_font.render("Égalité", True, BLACK)
 
         #init grid
         self.grid = pygame.Rect(75, 150, window_width - 150, window_height - 320)
@@ -48,17 +49,23 @@ class FinishScene(Scene):
         self.final_time = final_time
         self.number_people = number_people
 
-        if self.final_time[0] <= self.final_time[1]:
+        if has_win == "player":
             self.final_time_render_player = text_font.render(f"{self.final_time[0]:.2f}s", True, GREEN)
             self.final_time_render_ia = text_font.render(f"{self.final_time[1]:.2f}s", True, RED)
             self.diff_time_player_render = text_font.render("0", True, GREEN)
             self.diff_time_ia_render = text_font.render(f"+{(self.final_time[1] - self.final_time[0]):.2f}s", True, RED)
             
-        else:
+        elif has_win == "ia":
             self.final_time_render_player = text_font.render(f"{self.final_time[0]:.2f}s", True, RED)
             self.final_time_render_ia = text_font.render(f"{self.final_time[1]:.2f}s", True, GREEN)
             self.diff_time_player_render = text_font.render(f"+{(self.final_time[0] - self.final_time[1]):.2f}s", True, RED)
             self.diff_time_ia_render = text_font.render("0", True, GREEN)
+
+        else:
+            self.final_time_render_player = text_font.render(f"{self.final_time[0]:.2f}s", True, BLACK)
+            self.final_time_render_ia = text_font.render(f"{self.final_time[1]:.2f}s", True, BLACK)
+            self.diff_time_player_render = text_font.render("0", True, BLACK)
+            self.diff_time_ia_render = text_font.render("0", True, BLACK)
         
         self.number_people_player_render = text_font.render(str(self.number_people[0]), True, BLACK)
         self.number_people_ia_render = text_font.render(str(self.number_people[1]), True, BLACK) 
@@ -82,7 +89,7 @@ class FinishScene(Scene):
         draw_surface.blit(self.title_render, self.title_render.get_rect(center=(window_width // 2, 30)))
 
         #draw button 
-        pygame.draw.rect(draw_surface, ORANGE, self.finish_button, border_radius=5)
+        pygame.draw.rect(draw_surface, BLUE, self.finish_button, border_radius=5)
         draw_surface.blit(self.button_render, self.button_render.get_rect(center=self.finish_button.center))
 
         #draw win text

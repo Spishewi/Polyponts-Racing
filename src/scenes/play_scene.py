@@ -56,7 +56,7 @@ class PlayScene(Scene):
         self.player_finished = False
         self.ia_finished = False
         self.has_win = None
-        self.remaining_people = None
+        self.remaining_people = (0, 0)
 
         #init people rect
         high_figure = 30
@@ -76,7 +76,7 @@ class PlayScene(Scene):
 
         
         self.next_btn_render = self.text_font.render("Résumé de la partie", True, BLACK)
-        self.next_btn_rect  = pygame.Rect(window_width // 2 - self.next_btn_render.get_width() // 2 - 10, window_height - 80, self.next_btn_render.get_width() + 20, self.next_btn_render.get_height() + 10)
+        self.next_btn_rect  = pygame.Rect(window_width // 2 - self.next_btn_render.get_width() // 2 - 10, window_height - 80, self.next_btn_render.get_width() + 40, self.next_btn_render.get_height() + 20)
 
         #chrono init
         self.chrono_start_timestamp = pygame.time.get_ticks()
