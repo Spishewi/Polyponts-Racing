@@ -43,7 +43,7 @@ def load_animation(folder_path: str, nb_frame: int, height: int, flip_x: bool = 
     frames = []
     for i in range(nb_frame):
         frame = pygame.image.load(folder_path + str(i) + ".png").convert_alpha()
-        frame = pygame.transform.scale(frame, (frame.get_width() * height // frame.get_height(), height))
+        frame = pygame.transform.smoothscale(frame, (frame.get_width() * height // frame.get_height(), height))
         if flip_x:
             frame = pygame.transform.flip(frame, True, False)
         
