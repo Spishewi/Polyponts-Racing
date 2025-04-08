@@ -1,0 +1,1 @@
+pygbag --template ./src/pygbag.tmpl --title Polyponts-Racing --app_name Polyponts-Racing --build ./src
