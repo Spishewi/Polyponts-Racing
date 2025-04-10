@@ -83,9 +83,9 @@ class PlayScene(Scene):
         self.next_btn_rect  = pygame.Rect(window_width // 2 - self.next_btn_render.get_width() // 2 - 10, window_height - 80, self.next_btn_render.get_width() + 40, self.next_btn_render.get_height() + 20)
 
         #chrono init
-        self.chrono_start_timestamp = pygame.time.get_ticks()
         self.chrono_player = 0
         self.chrono_ia = 0
+        self.current_time = 0
 
         # people name cache
         self.people_name_surface_cache = {}
@@ -94,8 +94,8 @@ class PlayScene(Scene):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.next_btn_rect.collidepoint(event.pos) and self.player_finished and self.ia_finished:
                 events.send_scene_change_event("finish_scene", {"final_time": (self.chrono_player, self.chrono_ia), "number_people": self.remaining_people, "has_win": self.has_win})
+   
     def update(self, dt: float, *args: list, **kwargs: dict):
-
         # player movement handling
         if len(self.bridge1_list_people_player) != 0:
             # someone is walking on the player bridge 1
@@ -146,12 +146,12 @@ class PlayScene(Scene):
             self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
 
         #chrono update
-        current_time = (pygame.time.get_ticks() - self.chrono_start_timestamp) / 1000
+        self.current_time += dt
         if not self.player_finished:
-            self.chrono_player = current_time
+            self.chrono_player = self.current_time
 
         if not self.ia_finished:
-            self.chrono_ia = current_time
+            self.chrono_ia = self.current_time
             
     def draw(self, draw_surface: pygame.Surface, *args: list, **kwargs: dict):
         draw_surface.fill((255,255,255))
