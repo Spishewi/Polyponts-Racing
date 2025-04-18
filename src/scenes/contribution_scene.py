@@ -17,7 +17,7 @@ class ContributionScene(Scene):
         self.text_render3 = text_font.render("Sous la supervision de Jean-Charles Billaut.", True, BLACK)
         self.text_render4 = text_font.render("Crédits:", True, BLACK)
         self.text_render5 = text_font.render("- Police utilisée: m6x11. Réalisée par Daniel Linssen.", True, BLACK)
-        self.text_render6 = text_font.render("- Personnages réalisées par Segel2D.", True, BLACK)
+        self.text_render6 = text_font.render("- Personnages réalisés par Segel2D.", True, BLACK)
 
         #init back button
         self.back_button_render = self.text_font.render("Retour", True, BLACK)
