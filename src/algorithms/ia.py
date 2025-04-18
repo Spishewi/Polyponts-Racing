@@ -120,3 +120,14 @@ def sort_people(people_list:list[People], difficulty:str):
         return suboptimal_algorithm(people_list)
     elif difficulty == "hard":
         return johnsons_algorithm_people(people_list)
+    
+
+def compute_total_time(people_list:list[People]):
+    end_time_bridge1 = 0
+    end_time_bridge2 = 0
+    
+    for person in people_list:
+        end_time_bridge1 += person.m1_time
+        end_time_bridge2 = max(end_time_bridge1, end_time_bridge2) + person.m2_time
+
+    return end_time_bridge2

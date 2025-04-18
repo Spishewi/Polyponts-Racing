@@ -2,7 +2,7 @@ from scenes.scene import Scene
 import pygame
 from colors import *
 from utils import People, map_value, bridge_parabolla, load_animation, RunningState
-from algorithms.ia import sort_people
+from algorithms.ia import sort_people, compute_total_time
 import events
 
 class PlayScene(Scene):
@@ -89,11 +89,15 @@ class PlayScene(Scene):
 
         # people name cache
         self.people_name_surface_cache = {}
+
+        #final time ut
+        self.final_time_ia = compute_total_time(self.bridge1_list_people_ia)
+        self.final_time_player = compute_total_time(self.bridge1_list_people_player)
         
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.next_btn_rect.collidepoint(event.pos) and self.player_finished and self.ia_finished:
-                events.send_scene_change_event("finish_scene", {"final_time": (self.chrono_player, self.chrono_ia), "number_people": self.remaining_people, "has_win": self.has_win})
+                events.send_scene_change_event("finish_scene", {"final_time": (self.final_time_player, self.final_time_ia), "number_people": self.remaining_people, "has_win": self.has_win})
    
     def update(self, dt: float, *args: list, **kwargs: dict):
         # player movement handling
@@ -252,10 +256,10 @@ class PlayScene(Scene):
         #draw chronometer
         dx = 100
         dy = 20
-        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.2f}", True, BLACK)
+        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.2f}s", True, BLACK)
         draw_surface.blit(chrono_render_player, chrono_render_player.get_rect(center=(window_width-dx, dy)))
 
-        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.2f}", True, BLACK)
+        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.2f}s", True, BLACK)
         draw_surface.blit(chrono_render_ia, chrono_render_ia.get_rect(center=(window_width-dx, window_height/2+dy)))
     def _draw_bridge(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect):
         #set const
