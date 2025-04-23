@@ -75,7 +75,64 @@ def suboptimal_algorithm(people_list:list[People]):
     #sort the te optimal solution to obtain the inverse
     optimal_solution.sort(key=lambda x: x.id_number, reverse=True)
     return optimal_solution
- 
+
+def sort_people(people_list:list[People], difficulty:str):
+    if difficulty == "easy":
+        return random_algorithm(people_list)
+    elif difficulty == "medium":
+        return suboptimal_algorithm(people_list)
+    elif difficulty == "hard":
+        return johnsons_algorithm_people(people_list)
+    
+
+def compute_total_time(people_list:list[People]):
+    bridge_1 = people_list
+    bridge_2 = []
+
+    total_time = 0
+
+    bridge_1_people_time = bridge_1[0].m1_time
+    bridge_2_people_time = None
+
+    while len(bridge_1) != 0 or len(bridge_2) != 0:
+
+        if bridge_1_people_time is None:
+            step = bridge_2_people_time
+        elif bridge_2_people_time is None:
+            step = bridge_1_people_time
+        else:
+            step = min(bridge_1_people_time, bridge_2_people_time)
+
+        total_time += step
+
+        if bridge_1_people_time is not None:
+            bridge_1_people_time -= step
+
+        if bridge_2_people_time is not None:
+            bridge_2_people_time -= step
+
+        if bridge_1_people_time == 0:
+            bridge_2.append(bridge_1.pop(0))
+
+            if len(bridge_1) != 0:
+                bridge_1_people_time = bridge_1[0].m1_time
+            else:
+                bridge_1_people_time = None
+
+        if bridge_2_people_time == 0:
+            bridge_2.pop(0)
+
+            if len(bridge_2) != 0:
+                bridge_2_people_time = bridge_2[0].m2_time
+            else:
+                bridge_2_people_time = None
+
+        if bridge_2_people_time is None and len(bridge_2) != 0:
+            bridge_2_people_time = bridge_2[0].m2_time
+
+    return total_time
+
+
 
 if __name__ == "__main__":
     tasks = {
@@ -111,23 +168,3 @@ if __name__ == "__main__":
     print('\n')
     for task in sorted_tasks_people:
         print(task.m2_time, end=",")
-
-
-def sort_people(people_list:list[People], difficulty:str):
-    if difficulty == "easy":
-        return random_algorithm(people_list)
-    elif difficulty == "medium":
-        return suboptimal_algorithm(people_list)
-    elif difficulty == "hard":
-        return johnsons_algorithm_people(people_list)
-    
-
-def compute_total_time(people_list:list[People]):
-    end_time_bridge1 = 0
-    end_time_bridge2 = 0
-    
-    for person in people_list:
-        end_time_bridge1 += person.m1_time
-        end_time_bridge2 = max(end_time_bridge1, end_time_bridge2) + person.m2_time
-
-    return end_time_bridge2

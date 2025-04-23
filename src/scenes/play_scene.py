@@ -91,8 +91,8 @@ class PlayScene(Scene):
         self.people_name_surface_cache = {}
 
         #final time ut
-        self.final_time_ia = compute_total_time(self.bridge1_list_people_ia)
-        self.final_time_player = compute_total_time(self.bridge1_list_people_player)
+        self.final_time_ia = compute_total_time(self.bridge1_list_people_ia.copy())
+        self.final_time_player = compute_total_time(self.bridge1_list_people_player.copy())
         
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
