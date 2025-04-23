@@ -59,7 +59,6 @@ class PlayScene(Scene):
 
         self.player_finished = False
         self.ia_finished = False
-        self.has_win = None
         self.remaining_people = (0, 0)
 
         #init people rect
@@ -97,7 +96,12 @@ class PlayScene(Scene):
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.next_btn_rect.collidepoint(event.pos) and self.player_finished and self.ia_finished:
-                events.send_scene_change_event("finish_scene", {"final_time": (self.final_time_player, self.final_time_ia), "number_people": self.remaining_people, "has_win": self.has_win})
+
+                events.send_scene_change_event("finish_scene", {
+                    "final_time": (self.final_time_player, self.final_time_ia),
+                    "number_people": self.remaining_people,
+                    "has_win": self._get_has_win()
+                })
    
     def update(self, dt: float, *args: list, **kwargs: dict):
         # player movement handling
@@ -141,13 +145,13 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_ia) == 0 and len(self.bridge2_list_people_ia) == 0:
             self.ia_finished = True
 
-        if self.player_finished and not self.ia_finished:
-            self.has_win = "player"
-            self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
+        #if self.player_finished and not self.ia_finished:
+        #    self.has_win = "player"
+        #    self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
 
-        elif self.ia_finished and not self.player_finished:
-            self.has_win = "ia"
-            self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
+        #elif self.ia_finished and not self.player_finished:
+        #    self.has_win = "ia"
+        #    self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
 
         #chrono update
         self.current_time += dt
@@ -167,17 +171,6 @@ class PlayScene(Scene):
         #draw background
         draw_surface.blit(self.background_surface, (0, 0))
         draw_surface.blit(self.background_surface, (0, window_height // 2))
-
-        """#draw background water
-        high_water = 250
-        water_1 = pygame.Rect(0, high_water, window_width, window_height/2-high_water)
-        pygame.draw.rect(draw_surface, BLUE, water_1)
-        water_2 = pygame.Rect(0, window_height/2+high_water, window_width, window_height/2-high_water)
-        pygame.draw.rect(draw_surface, BLUE, water_2)
-
-        #draw start platform
-        pygame.draw.rect(draw_surface, GREY, self.start_platform_1)
-        pygame.draw.rect(draw_surface, GREY, self.start_platform_2)"""
 
         #draw line
         line_middle = pygame.Rect(0, window_height/2, window_width, 5)
@@ -219,6 +212,15 @@ class PlayScene(Scene):
         draw_surface.blit(self.title_render_player, self.title_render_player.get_rect(center=(window_width // 2, 30)))
         draw_surface.blit(self.title_render_ia, self.title_render_ia.get_rect(center=(window_width // 2, window_height//2 + 30)))
 
+        #draw chronometer
+        dx = 100
+        dy = 20
+        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.2f}s", True, BLACK)
+        draw_surface.blit(chrono_render_player, chrono_render_player.get_rect(center=(window_width-dx, dy)))
+
+        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.2f}s", True, BLACK)
+        draw_surface.blit(chrono_render_ia, chrono_render_ia.get_rect(center=(window_width-dx, window_height/2+dy)))
+
         # WIN text
         if self.player_finished and not self.ia_finished:
             # black overlay
@@ -242,9 +244,9 @@ class PlayScene(Scene):
             BLACK_SURFACE.set_alpha(200)
             draw_surface.blit(BLACK_SURFACE, (0, 0), special_flags=pygame.BLEND_ALPHA_SDL2)
 
-            if self.has_win == "player":
+            if self._get_has_win() == "player":
                 draw_surface.blit(self.title_win_player, self.title_win_player.get_rect(center=(window_width // 2, window_height//2)))
-            elif self.has_win == "ia":
+            elif self._get_has_win() == "ia":
                 draw_surface.blit(self.title_win_ia, self.title_win_ia.get_rect(center=(window_width // 2, window_height//2)))
             else:
                 draw_surface.blit(self.title_win_draw, self.title_win_draw.get_rect(center=(window_width // 2, window_height//2)))
@@ -252,15 +254,6 @@ class PlayScene(Scene):
             # next button
             pygame.draw.rect(draw_surface, BLUE, self.next_btn_rect, border_radius=5)
             draw_surface.blit(self.next_btn_render, self.next_btn_render.get_rect(center=self.next_btn_rect.center))
-
-        #draw chronometer
-        dx = 100
-        dy = 20
-        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.2f}s", True, BLACK)
-        draw_surface.blit(chrono_render_player, chrono_render_player.get_rect(center=(window_width-dx, dy)))
-
-        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.2f}s", True, BLACK)
-        draw_surface.blit(chrono_render_ia, chrono_render_ia.get_rect(center=(window_width-dx, window_height/2+dy)))
     def _draw_bridge(self, draw_surface: pygame.Surface, start_plateform: pygame.Rect, end_plateform: pygame.Rect):
         #set const
         
@@ -326,3 +319,10 @@ class PlayScene(Scene):
             people_name_surface = self.text_font.render(chr(ord("A") + id_number - 1), True, BLACK)
             self.people_name_surface_cache[id_number] = people_name_surface
             return people_name_surface
+        
+    def _get_has_win(self) -> str | None:
+        if self.final_time_ia < self.final_time_player:
+            return "ia"
+        if self.final_time_player < self.final_time_ia:
+            return "player"
+        return None
