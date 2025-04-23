@@ -3,10 +3,10 @@ import pygame
 from colors import *
 import events
 
-from utils import map_value, People
-from math import floor, ceil
+from utils import People
+from random import randint
 
-from random import randint, shuffle
+from algorithms.ia import compute_total_time
 
 class ChooseOrderScene(Scene):
     ...
@@ -48,6 +48,8 @@ class ChooseOrderScene(Scene):
         self.people_list = self._generate_people_list()
         self.cells_list = self._generate_cells_list()
 
+        self._updated_computed_total_time()
+
         # cell grabbing
         self.grabbed_cell_index = None
         self.collided_cell_index = None
@@ -78,6 +80,8 @@ class ChooseOrderScene(Scene):
                 #self.people_list[cell_index], self.people_list[self.grabbed_cell_index] = self.people_list[self.grabbed_cell_index], self.people_list[cell_index]
                 self.cells_list.insert(collided_cell_index, self.cells_list.pop(self.grabbed_cell_index))
                 self.people_list.insert(collided_cell_index, self.people_list.pop(self.grabbed_cell_index))
+
+                self._updated_computed_total_time()
 
             self.grabbed_cell_index = None
 
@@ -111,6 +115,10 @@ class ChooseOrderScene(Scene):
         # draw grabbed cell
         if self.grabbed_cell_index is not None:
             self._draw_grabbed_cell(draw_surface)
+
+        #draw computed time
+        if self.difficulty == "easy":
+            draw_surface.blit(self.render_total_computed_time, self.render_total_computed_time.get_rect(center=self.play_button.center + pygame.Vector2(0, -70)))
 
 
         #draw button play
@@ -240,3 +248,8 @@ class ChooseOrderScene(Scene):
             if cell.get_rect(topleft=self._get_cell_position(i, cell)).collidepoint(event.pos):
                 return i
         return None
+    
+    def _updated_computed_total_time(self):
+        self.total_computed_time = compute_total_time(self.people_list.copy())
+        self.render_total_computed_time = self.text_font.render(f"Temps total de traversée : {self.total_computed_time} UT.", True, BLACK)
+
