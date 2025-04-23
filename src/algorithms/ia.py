@@ -58,8 +58,9 @@ def suboptimal_algorithm(people_list:list[People]):
     # obtain the optimal solution wih the johnsons algorithm
     optimal_solution = johnsons_algorithm_people(people_list)
     nb_people = len(optimal_solution)
-
-    for i in range(nb_people // 4):
+    num_swaps = round(2 + (nb_people - 5)*0.2)
+    
+    for i in range(num_swaps):
         #generate the two indices that need to be swapped
         pos1 = randint(0, nb_people - 1)
         pos2 = randint(0, nb_people - 1)
