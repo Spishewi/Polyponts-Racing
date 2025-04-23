@@ -104,39 +104,61 @@ class PlayScene(Scene):
                 })
    
     def update(self, dt: float, *args: list, **kwargs: dict):
+        speed_factor = 15
+        
         # player movement handling
         if len(self.bridge1_list_people_player) != 0:
             # someone is walking on the player bridge 1
-            if self.bridge1_current_time_player < self.bridge1_list_people_player[0].m1_time:
-                self.bridge1_current_time_player += dt * 15
+            if self.bridge1_current_time_player + dt * speed_factor < self.bridge1_list_people_player[0].m1_time:
+                self.bridge1_current_time_player += dt * speed_factor
 
             # someone has finished walking on the bridge 1
             else:
+                
+                if len(self.bridge1_list_people_player) > 1:
+                    self.bridge1_current_time_player = self.bridge1_current_time_player + dt * speed_factor - self.bridge1_list_people_player[0].m1_time
+                else:
+                    self.bridge1_current_time_player = 0
+
                 self.bridge2_list_people_player.append(self.bridge1_list_people_player.pop(0))
-                self.bridge1_current_time_player = 0
 
         if len(self.bridge2_list_people_player) != 0:
-            if self.bridge2_current_time_player < self.bridge2_list_people_player[0].m2_time:
+            if self.bridge2_current_time_player + dt * speed_factor < self.bridge2_list_people_player[0].m2_time:
                 self.bridge2_current_time_player += dt * 15
             else:
+                if len(self.bridge2_list_people_player) > 1:
+                    self.bridge2_current_time_player = self.bridge2_current_time_player + dt * speed_factor - self.bridge2_list_people_player[0].m2_time
+                else:
+                    self.bridge2_current_time_player = 0
+
                 self.bridge2_list_people_player.pop(0)
-                self.bridge2_current_time_player = 0
 
         # ia movement handling
         if len(self.bridge1_list_people_ia) != 0:
             # someone is walking on the ia bridge 1
-            if self.bridge1_current_time_ia < self.bridge1_list_people_ia[0].m1_time:
-                self.bridge1_current_time_ia += dt * 15
+            if self.bridge1_current_time_ia + dt * speed_factor < self.bridge1_list_people_ia[0].m1_time:
+                self.bridge1_current_time_ia += dt * speed_factor
+
+            # someone has finished walking on the bridge 1
             else:
+                
+                if len(self.bridge1_list_people_ia) > 1:
+                    self.bridge1_current_time_ia = self.bridge1_current_time_ia + dt * speed_factor - self.bridge1_list_people_ia[0].m1_time
+                else:
+                    self.bridge1_current_time_ia = 0
+
                 self.bridge2_list_people_ia.append(self.bridge1_list_people_ia.pop(0))
-                self.bridge1_current_time_ia = 0
-        
+
         if len(self.bridge2_list_people_ia) != 0:
-            if self.bridge2_current_time_ia < self.bridge2_list_people_ia[0].m2_time:
+            if self.bridge2_current_time_ia + dt * speed_factor < self.bridge2_list_people_ia[0].m2_time:
                 self.bridge2_current_time_ia += dt * 15
             else:
+                if len(self.bridge2_list_people_ia) > 1:
+                    self.bridge2_current_time_ia = self.bridge2_current_time_ia + dt * speed_factor - self.bridge2_list_people_ia[0].m2_time
+                else:
+                    self.bridge2_current_time_ia = 0
+
                 self.bridge2_list_people_ia.pop(0)
-                self.bridge2_current_time_ia = 0
 
         # check if the game is over
         if len(self.bridge1_list_people_player) == 0 and len(self.bridge2_list_people_player) == 0:
