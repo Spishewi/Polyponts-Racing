@@ -167,13 +167,13 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_ia) == 0 and len(self.bridge2_list_people_ia) == 0:
             self.ia_finished = True
 
-        #if self.player_finished and not self.ia_finished:
+        if self.player_finished and not self.ia_finished:
         #    self.has_win = "player"
-        #    self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
+            self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
 
-        #elif self.ia_finished and not self.player_finished:
+        elif self.ia_finished and not self.player_finished:
         #    self.has_win = "ia"
-        #    self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
+            self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
 
         #chrono update
         self.current_time += dt
@@ -237,10 +237,10 @@ class PlayScene(Scene):
         #draw chronometer
         dx = 100
         dy = 20
-        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.2f}s", True, BLACK)
+        chrono_render_player = self.text_font.render(f"Chrono: {self.chrono_player:.1f}s", True, BLACK)
         draw_surface.blit(chrono_render_player, chrono_render_player.get_rect(center=(window_width-dx, dy)))
 
-        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.2f}s", True, BLACK)
+        chrono_render_ia = self.text_font.render(f"Chrono: {self.chrono_ia:.1f}s", True, BLACK)
         draw_surface.blit(chrono_render_ia, chrono_render_ia.get_rect(center=(window_width-dx, window_height/2+dy)))
 
         # WIN text
