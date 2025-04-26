@@ -93,6 +93,23 @@ class PlayScene(Scene):
         self.final_time_ia = compute_total_time(self.bridge1_list_people_ia.copy())
         self.final_time_player = compute_total_time(self.bridge1_list_people_player.copy())
         
+        #remaining people
+        counter_people = 0
+        if self.final_time_ia < self.final_time_player:
+            final_time = self.final_time_player
+            for people in self.bridge1_list_people_player[::-1]:
+                if final_time > self.final_time_ia:
+                    counter_people += 1
+                    final_time -= people.m2_time
+            self.remaining_people = (counter_people, 0)
+        elif self.final_time_ia > self.final_time_player:
+            final_time = self.final_time_ia
+            for people in self.bridge1_list_people_ia[::-1]:
+                if final_time > self.final_time_player:
+                    counter_people += 1
+                    final_time -= people.m2_time
+            self.remaining_people = (0, counter_people)
+        
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.next_btn_rect.collidepoint(event.pos) and self.player_finished and self.ia_finished:
@@ -167,13 +184,13 @@ class PlayScene(Scene):
         if len(self.bridge1_list_people_ia) == 0 and len(self.bridge2_list_people_ia) == 0:
             self.ia_finished = True
 
-        if self.player_finished and not self.ia_finished:
+        #if self.player_finished and not self.ia_finished:
         #    self.has_win = "player"
-            self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
+            #self.remaining_people = (0, len(self.bridge1_list_people_ia) + len(self.bridge2_list_people_ia))
 
-        elif self.ia_finished and not self.player_finished:
+        #elif self.ia_finished and not self.player_finished:
         #    self.has_win = "ia"
-            self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
+            #self.remaining_people = (len(self.bridge1_list_people_player) + len(self.bridge2_list_people_player), 0)
 
         #chrono update
         self.current_time += dt
