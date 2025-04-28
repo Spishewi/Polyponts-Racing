@@ -59,7 +59,6 @@ class PlayScene(Scene):
 
         self.player_finished = False
         self.ia_finished = False
-        self.remaining_people = (0, 0)
 
         #init people rect
         high_figure = 30
@@ -90,24 +89,25 @@ class PlayScene(Scene):
         self.people_name_surface_cache = {}
 
         #final time ut
-        self.final_time_ia = compute_total_time(self.bridge1_list_people_ia.copy())
-        self.final_time_player = compute_total_time(self.bridge1_list_people_player.copy())
+        self.total_computed_time_ia = compute_total_time(self.bridge1_list_people_ia.copy())
+        self.total_computed_time_player = compute_total_time(self.bridge1_list_people_player.copy())
         
-        #remaining people
-        counter_people = 0
-        if self.final_time_ia < self.final_time_player:
-            final_time = self.final_time_player
-            for people in self.bridge1_list_people_player[::-1]:
-                if final_time > self.final_time_ia:
-                    counter_people += 1
-                    final_time -= people.m2_time
+        # remaining people
+        self.remaining_people = (0, 0)
+        if self.total_computed_time_ia < self.total_computed_time_player:
+            remaining_time = self.total_computed_time_player - self.total_computed_time_ia
+            counter_people = 0
+            while remaining_time > 0:
+                remaining_time -= self.bridge1_list_people_player[-counter_people-1].m2_time
+                counter_people += 1
             self.remaining_people = (counter_people, 0)
-        elif self.final_time_ia > self.final_time_player:
-            final_time = self.final_time_ia
-            for people in self.bridge1_list_people_ia[::-1]:
-                if final_time > self.final_time_player:
-                    counter_people += 1
-                    final_time -= people.m2_time
+
+        elif self.total_computed_time_ia > self.total_computed_time_player:
+            remaining_time = self.total_computed_time_ia - self.total_computed_time_player
+            counter_people = 0
+            while remaining_time > 0:
+                remaining_time -= self.bridge1_list_people_ia[-counter_people-1].m2_time
+                counter_people += 1
             self.remaining_people = (0, counter_people)
         
     def event_handler(self, event: pygame.Event, *args: list, **kwargs: dict):
@@ -115,7 +115,7 @@ class PlayScene(Scene):
             if self.next_btn_rect.collidepoint(event.pos) and self.player_finished and self.ia_finished:
 
                 events.send_scene_change_event("finish_scene", {
-                    "final_time": (self.final_time_player, self.final_time_ia),
+                    "final_time": (self.total_computed_time_player, self.total_computed_time_ia),
                     "number_people": self.remaining_people,
                     "has_win": self._get_has_win()
                 })
@@ -360,8 +360,8 @@ class PlayScene(Scene):
             return people_name_surface
         
     def _get_has_win(self) -> str | None:
-        if self.final_time_ia < self.final_time_player:
+        if self.total_computed_time_ia < self.total_computed_time_player:
             return "ia"
-        if self.final_time_player < self.final_time_ia:
+        if self.total_computed_time_player < self.total_computed_time_ia:
             return "player"
         return None
