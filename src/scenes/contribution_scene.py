@@ -17,7 +17,8 @@ class ContributionScene(Scene):
         self.text_render3 = text_font.render("Sous la supervision de Jean-Charles Billaut.", True, BLACK)
         self.text_render4 = text_font.render("Crédits:", True, BLACK)
         self.text_render5 = text_font.render("- Police utilisée: m6x11. Réalisée par Daniel Linssen.", True, BLACK)
-        self.text_render6 = text_font.render("- Personnages réalisés par Segel2D.", True, BLACK)
+        self.text_render6 = text_font.render("- Dessin du personnage: Segel2D", True, BLACK)
+        self.text_render7 = text_font.render("- Icônes: Lucide Contributors 2022", True, BLACK)
 
         #init back button
         self.back_button_render = self.text_font.render("Retour", True, BLACK)
@@ -61,6 +62,7 @@ class ContributionScene(Scene):
         draw_surface.blit(self.text_render4, self.text_render4.get_rect(center=(window_width // 2, y_start + 4 * y_gap)))
         draw_surface.blit(self.text_render5, self.text_render5.get_rect(center=(window_width // 2, y_start + 5 * y_gap)))
         draw_surface.blit(self.text_render6, self.text_render6.get_rect(center=(window_width // 2, y_start + 6 * y_gap)))
+        draw_surface.blit(self.text_render7, self.text_render7.get_rect(center=(window_width // 2, y_start + 7 * y_gap)))
 
         #draw link button
         self.link_button.centerx = window_width // 2 
