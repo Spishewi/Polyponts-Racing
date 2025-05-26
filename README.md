@@ -9,3 +9,4 @@ De plus, chaque personne met un temps différent à traverser chaque pont ! Il v
 # Credits
 - font: Daniel Linssen
 - Dessin du personnage: Segel2D
+- Icônes: Lucide Contributors 2022 (voir LUCIDE-LICENSE)

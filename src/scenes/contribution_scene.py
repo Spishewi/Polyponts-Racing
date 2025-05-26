@@ -17,8 +17,10 @@ class ContributionScene(Scene):
         self.text_render3 = text_font.render("Sous la supervision de Jean-Charles Billaut.", True, BLACK)
         self.text_render4 = text_font.render("Crédits:", True, BLACK)
         self.text_render5 = text_font.render("- Police utilisée: m6x11. Réalisée par Daniel Linssen.", True, BLACK)
-        self.text_render6 = text_font.render("- Personnages réalisés par Segel2D.", True, BLACK)
-
+        self.text_render6 = text_font.render("- Dessin du personnage: Segel2D", True, BLACK)
+        self.text_render7 = text_font.render("- Icônes: Lucide Contributors 2022", True, BLACK)
+        self.flowshop_render = text_font.render("- Problème flow-shop à deux machines", True, BLACK)
+        self.johnson_render = text_font.render("- Algorithme de Johnson 1954", True, BLACK)
         #init back button
         self.back_button_render = self.text_font.render("Retour", True, BLACK)
         self.back_button = pygame.Rect(10, 10, 100, 50)
@@ -53,7 +55,7 @@ class ContributionScene(Scene):
         draw_surface.blit(self.title_render, self.title_render.get_rect(center=(window_width // 2, y_offset)))
 
         #draw text
-        y_start = 100
+        y_start = 80
         y_gap = 40
         draw_surface.blit(self.text_render1, self.text_render1.get_rect(center=(window_width // 2, y_start)))
         draw_surface.blit(self.text_render2, self.text_render2.get_rect(center=(window_width // 2, y_start + y_gap)))
@@ -61,10 +63,13 @@ class ContributionScene(Scene):
         draw_surface.blit(self.text_render4, self.text_render4.get_rect(center=(window_width // 2, y_start + 4 * y_gap)))
         draw_surface.blit(self.text_render5, self.text_render5.get_rect(center=(window_width // 2, y_start + 5 * y_gap)))
         draw_surface.blit(self.text_render6, self.text_render6.get_rect(center=(window_width // 2, y_start + 6 * y_gap)))
-
+        draw_surface.blit(self.text_render7, self.text_render7.get_rect(center=(window_width // 2, y_start + 7 * y_gap)))
+        draw_surface.blit(self.flowshop_render, self.flowshop_render.get_rect(center=(window_width // 2, y_start + 8*y_gap)))
+        draw_surface.blit(self.johnson_render, self.johnson_render.get_rect(center=(window_width // 2, y_start + 9*y_gap)))
+        
         #draw link button
         self.link_button.centerx = window_width // 2 
-        self.link_button.centery = window_height - 140
+        self.link_button.centery = window_height - 90
         pygame.draw.rect(draw_surface, CARIBBEAN_CURRENT, self.link_button, border_radius=5)
         
         total_width = self.link_button_render.get_width() + self.github.get_width() + 10 
