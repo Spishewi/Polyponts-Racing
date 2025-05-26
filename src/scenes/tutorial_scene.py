@@ -4,7 +4,7 @@ from colors import *
 import events
 from utils import multiple_render
 
-TUTORIAL_TEXT = "Le but de ce jeu est d’illustrer un problème d’ordonnancement : le flow-shop à deux machines (algorithme de Johnson). Concrètement, vous allez devoir aider des personnages à traverser des ponts le plus rapidement possible, en les triant dans l’ordre de votre choix. Vos personnages affronteront d’autres personnages triés par une IA très perfectionnée. Mais attention ! Les ponts sont fragiles, et un seul personnage peut monter sur un pont à la fois. De plus, chaque personnage met un temps différent à traverser chaque pont. Il vous faudra donc trier les personnages afin d’optimiser le temps de passage de chacun, et ainsi battre le tri de l’IA"
+TUTORIAL_TEXT = "Le but de ce jeu est d'illustrer un problème d'ordonnancement : le flow-shop à deux machines (algorithme de Johnson). Concrètement, vous allez devoir aider des personnages à traverser des ponts le plus rapidement possible, en les triant dans l'ordre de votre choix. Vos personnages affronteront d'autres personnages triés par une IA très perfectionnée. Mais attention ! Les ponts sont fragiles, et un seul personnage peut monter sur un pont à la fois. De plus, chaque personnage met un temps différent à traverser chaque pont. Il vous faudra donc trier les personnages afin d'optimiser le temps de passage de chacun, et ainsi battre le tri de l'IA"
 class TutorialScene(Scene):
     def __init__(self, title_font: pygame.Font, text_font: pygame.Font):
     
